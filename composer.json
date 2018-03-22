@@ -1,5 +1,5 @@
 {
-    "name": "field/cito-bundle",
+    "name": "field-interactive/cito-bundle",
     "type": "symfony-bundle",
     "description": "Field CitoBundle",
     "keywords": ["cito"],
