@@ -1,0 +1,49 @@
+{
+    "name": "field/cito-bundle",
+    "type": "symfony-bundle",
+    "description": "Field CitoBundle",
+    "keywords": ["cito"],
+    "homepage": "https://www.field-interactive.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Tim Kompernaß",
+            "email": "t.kompernass@field-interactive.com"
+        },
+        {
+            "name": "Fabian Schmick",
+            "email": "f.schmick@field-interactive.com"
+        },
+        {
+            "name": "Marc Harding",
+            "email": "m.harding@field-interactive.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1.3",
+        "liip/imagine-bundle": "^2.0@dev",
+        "sensio/framework-extra-bundle": "^5.1",
+        "symfony/asset": "^4.0",
+        "symfony/flex": "^1.0",
+        "symfony/form": "^4.0",
+        "symfony/framework-bundle": "^4.0",
+        "symfony/lts": "^4@dev",
+        "symfony/twig-bundle": "^4.0",
+        "symfony/yaml": "^4.0"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": { "FieldInteractive\\CitoBundle\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "conflict": {
+        "symfony/symfony": "*"
+    }
+}
