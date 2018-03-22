@@ -2,15 +2,15 @@
 
 namespace FieldInteractive\CitoBundle;
 
-use FieldInteractive\CitoBundle\DependencyInjection\FieldCitoExtension;
+use FieldInteractive\CitoBundle\DependencyInjection\CitoExtension;
 use Symfony\Component\Console\Application;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class FieldCitoBundle extends Bundle
+class CitoBundle extends Bundle
 {
     public function getContainerExtension()
     {
-        return new FieldCitoExtension();
+        return new CitoExtension();
     }
 
     public function registerCommands(Application $application)
