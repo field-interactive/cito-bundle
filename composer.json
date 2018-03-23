@@ -19,7 +19,7 @@
             "email": "m.harding@field-interactive.com"
         }
     ],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "require": {
         "php": "^7.0",
         "liip/imagine-bundle": "^2.0@dev",
