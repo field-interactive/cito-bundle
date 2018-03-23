@@ -16,7 +16,12 @@ class CitoExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $container->setParameter('field_cito.dir.pages', $configs[0]['pages']);
+        $dirPages = '%kernel.project_dir%/pages/';
+        if (isset($configs[0]['pages'])) {
+            $dirPages = $configs[0]['pages'];
+        }
+
+        $container->setParameter('field_cito.dir.pages', $dirPages);
 
         $this->addAnnotatedClassesToCompile(array(
             'FieldInteractive\\Cito\\Controller\\CitoController',
