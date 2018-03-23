@@ -19,8 +19,9 @@
             "email": "m.harding@field-interactive.com"
         }
     ],
+    "minimum-stability": "stable",
     "require": {
-        "php": "^7",
+        "php": "^7.0",
         "liip/imagine-bundle": "^2.0@dev",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/asset": "^4.0",
