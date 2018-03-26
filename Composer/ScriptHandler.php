@@ -37,21 +37,31 @@ class ScriptHandler
     {
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
-        $pagesDir = $options['symfony-pages-dir'];
+        $pagesDir = $options['cito-pages-dir'];
         $fs = new Filesystem();
 
         $fs->copy(__DIR__.'/../Resources/config/packages/cito.yaml', $configDir.'/packages/cito.yaml', true);
         $fs->copy(__DIR__.'/../Resources/config/routes/cito.yaml', $configDir.'/routes/cito.yaml', true);
 
-        $fs->copy(__DIR__.'/../Resources/pages/index.html.twig', $pagesDir.'index.html.twig', true);
+        $fs->copy(__DIR__.'/../Resources/pages/index.html.twig', $pagesDir.'/index.html.twig', true);
     }
 
     /**
      * @param Event $event
      */
-    public static function addRequirementsFile(Event $event)
+    public static function addToConfigFiles(Event $event)
     {
+        // override or add lines the config files
+        // 1. twig
+        // 2. imagine bundle
+    }
 
+    public static function installSkeletonFiles(Event $event)
+    {
+        $fs = new Filesystem();
+
+        $fs->copy(__DIR__.'/../Skeleton/gulpfile.js', 'gulpfile.js', true);
+        $fs->copy(__DIR__.'/../Skeleton/package.json', 'package.json', true);
     }
 
     protected static function getOptions(Event $event)

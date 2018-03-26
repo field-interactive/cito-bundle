@@ -25,7 +25,6 @@
         "liip/imagine-bundle": "^2.0@dev",
         "sensio/framework-extra-bundle": "^5.0",
         "sensio/distribution-bundle": "^5.0",
-        "symfony/dotenv": "^4.0",
         "symfony/asset": "^4.0",
         "symfony/flex": "^1.0",
         "symfony/form": "^4.0",
@@ -35,9 +34,15 @@
         "symfony/yaml": "^4.0",
         "composer/ca-bundle": "^1"
     },
+    "require-dev": {
+        "symfony/dotenv": "^4.0",
+        "symfony/profiler-pack": "^1.0",
+        "symfony/web-server-bundle": "^4.0"
+    },
     "scripts": {
         "cito-scripts": [
-            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installSkeletonFiles"
         ],
         "post-install-cmd": [
             "@cito-scripts"
