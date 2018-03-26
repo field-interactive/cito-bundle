@@ -1,0 +1,2 @@
+_field_interactive_cito:
+    resource: "@CitoBundle/Resources/config/routes.yaml"

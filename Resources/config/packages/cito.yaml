@@ -1,0 +1,2 @@
+cito:
+    pages: '%kernel.project_dir%/pages/'
