@@ -16,15 +16,23 @@ class CitoExtension extends Extension
         $loader = new YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yaml');
 
-        $dirPages = '%kernel.project_dir%/pages/';
-        if (isset($configs[0]['pages'])) {
-            $dirPages = $configs[0]['pages'];
-        }
+        $configuration = new Configuration();
 
-        $container->setParameter('field_cito.dir.pages', $dirPages);
+        $config = $this->processConfiguration($configuration, $configs);
+
+        $definition = $container->getDefinition('cito.pages');
+        $definition->replaceArgument(0, $config['pages']);
 
         $this->addAnnotatedClassesToCompile(array(
             'FieldInteractive\\Cito\\Controller\\CitoController',
         ));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getConfiguration(array $config, ContainerBuilder $container)
+    {
+        return new Configuration();
     }
 }
