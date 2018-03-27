@@ -42,6 +42,7 @@
     "scripts": {
         "cito-scripts": [
             "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::addToConfigFiles",
             "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installSkeletonFiles"
         ],
         "post-install-cmd": [

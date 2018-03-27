@@ -13,6 +13,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Composer\Script\Event;
+use Symfony\Component\Yaml\Yaml;
 
 class ScriptHandler
 {
@@ -40,10 +41,10 @@ class ScriptHandler
         $pagesDir = $options['cito-pages-dir'];
         $fs = new Filesystem();
 
-        $fs->copy(__DIR__.'/../Resources/config/packages/cito.yaml', $configDir.'/packages/cito.yaml', true);
-        $fs->copy(__DIR__.'/../Resources/config/routes/cito.yaml', $configDir.'/routes/cito.yaml', true);
+        $fs->copy(__DIR__ . '/../Resources/config/packages/cito.yaml', $configDir . '/packages/cito.yaml', true);
+        $fs->copy(__DIR__ . '/../Resources/config/routes/cito.yaml', $configDir . '/routes/cito.yaml', true);
 
-        $fs->copy(__DIR__.'/../Resources/pages/index.html.twig', $pagesDir.'/index.html.twig', true);
+        $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig', true);
     }
 
     /**
@@ -51,17 +52,50 @@ class ScriptHandler
      */
     public static function addToConfigFiles(Event $event)
     {
-        // override or add lines the config files
-        // 1. twig
-        // 2. imagine bundle
+        $options = static::getOptions($event);
+        $configDir = $options['symfony-config-dir'];
+        $pagesDir = $options['cito-pages-dir'];
+        $fs = new Filesystem();
+
+        // Add twig config
+        if (file_exists($configDir . '/packages/twig.yaml')) {
+            $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
+            $pagesDir = (strpos($pagesDir, 'kernel.project_dir')) ? $pagesDir : '%kernel.project_dir%/' . $pagesDir;
+            if (!empty($twigYaml) && is_array($twigYaml['twig']['paths']) && !in_array($pagesDir, $twigYaml['twig']['paths'])) {
+                $twigYaml['twig']['paths'][] = $pagesDir;
+                $yaml = Yaml::dump($twigYaml);
+                $fs->remove($configDir . '/packages/twig.yaml');
+                $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
+            } elseif (empty($twigYaml)) {
+                $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
+            }
+        } else {
+            $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
+        }
+
+        // Add imagine config
+        if (file_exists($configDir . '/packages/imagine.yaml')) {
+            $imagineYaml = Yaml::parseFile($configDir . '/packages/imagine.yaml');
+            if (!empty($imagineYaml) && is_array($imagineYaml['liip_imagine']['filter_sets']) && !in_array('picture_macro', $imagineYaml['liip_imagine']['filter_sets'])) {
+                $picture_macro = Yaml::parseFile(__DIR__ . '/../Resources/config/packages/imagine.yaml')['liip_imagine']['filter_sets'];
+                $imagineYaml['liip_imagine']['filter_sets']['picture_macro'] = $picture_macro['picture_macro'];
+                $yaml = Yaml::dump($imagineYaml, 9);
+                $fs->remove($configDir . '/packages/imagine.yaml');
+                $fs->dumpFile($configDir . '/packages/imagine.yaml', $yaml);
+            } elseif (empty($imagineYaml)) {
+                $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
+            }
+        } else {
+            $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
+        }
     }
 
     public static function installSkeletonFiles(Event $event)
     {
         $fs = new Filesystem();
 
-        $fs->copy(__DIR__.'/../Skeleton/gulpfile.js', 'gulpfile.js', true);
-        $fs->copy(__DIR__.'/../Skeleton/package.json', 'package.json', true);
+        $fs->copy(__DIR__ . '/../Skeleton/gulpfile.js', 'gulpfile.js', true);
+        $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', true);
     }
 
     protected static function getOptions(Event $event)
@@ -102,7 +136,7 @@ class ScriptHandler
         }
 
         if ($ini) {
-            $arguments[] = '--php-ini='.$ini;
+            $arguments[] = '--php-ini=' . $ini;
         }
 
         return $arguments;
@@ -111,7 +145,7 @@ class ScriptHandler
     /**
      * Returns a relative path to the directory that contains the `console` command.
      *
-     * @param Event  $event      The command event
+     * @param Event $event The command event
      * @param string $actionName The name of the action
      *
      * @return string|null The path to the console directory, null if not found
