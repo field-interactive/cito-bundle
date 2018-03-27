@@ -39,19 +39,6 @@
         "symfony/profiler-pack": "^1.0",
         "symfony/web-server-bundle": "^4.0"
     },
-    "scripts": {
-        "cito-scripts": [
-            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installRequirementsFile",
-            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::addToConfigFiles",
-            "FieldInteractive\\CitoBundle\\Composer\\ScriptHandler::installSkeletonFiles"
-        ],
-        "post-install-cmd": [
-            "@cito-scripts"
-        ],
-        "post-update-cmd": [
-            "@cito-scripts"
-        ]
-    },
     "config": {
         "preferred-install": {
             "*": "dist"
