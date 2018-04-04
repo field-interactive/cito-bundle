@@ -56,7 +56,13 @@ class ScriptHandler
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
         $pagesDir = $options['cito-pages-dir'];
+        $publicDir = $options['symfony-public-dir'];
         $fs = new Filesystem();
+
+        // Add public files
+        if (!file_exists($publicDir . '/.htaccess')) {
+            $fs->copy(__DIR__ . '/../Resources/public/.htaccess', $publicDir . '/.htaccess', true);
+        }
 
         // Add twig config
         if (file_exists($configDir . '/packages/twig.yaml')) {
@@ -114,8 +120,9 @@ class ScriptHandler
     {
         $fs = new Filesystem();
 
-        $fs->copy(__DIR__ . '/../Skeleton/gulpfile.js', 'gulpfile.js', true);
-        $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', true);
+        $fs->copy(__DIR__ . '/../Skeleton/gulpfile.js', 'gulpfile.js', false);
+        $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', false);
+        $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
     }
 
     protected static function getOptions(Event $event)
