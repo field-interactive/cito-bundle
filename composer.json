@@ -30,6 +30,7 @@
         "symfony/yaml": "^4.0",
         "symfony/filesystem": "^3.0|^4.0",
         "symfony/process": "^3.0|^4.0",
+        "liip/imagine-bundle": "^2@dev",
         "composer/ca-bundle": "^1"
     },
     "require-dev": {

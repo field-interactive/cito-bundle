@@ -30,11 +30,11 @@ class ScriptHandler
     );
 
     /**
-     * Updated the requirements file.
+     * Updated the required files.
      *
      * @param Event $event
      */
-    public static function installRequirementsFile(Event $event)
+    public static function installRequiredFiles(Event $event)
     {
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
@@ -48,9 +48,10 @@ class ScriptHandler
     }
 
     /**
+     * update the configuration files
      * @param Event $event
      */
-    public static function addToConfigFiles(Event $event)
+    public static function installConfiguration(Event $event)
     {
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
@@ -88,9 +89,28 @@ class ScriptHandler
         } else {
             $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
         }
+
+        // Add imaginebundle to bundles.php
+        $contents = require $configDir . '/bundles.php';
+        if (!array_key_exists("Liip\ImagineBundle\LiipImagineBundle", $contents)) {
+            $content = file_get_contents($configDir . '/bundles.php');
+            $lines = explode("\n", $content);
+            array_pop($lines);
+            array_pop($lines);
+            $lines[] = "\tLiip\ImagineBundle\LiipImagineBundle::class => ['all' => true],";
+            $lines[] = "];";
+            $lines[] = "";
+            $content = implode("\n", $lines);
+            file_put_contents($configDir . '/bundles.php', $content);
+        }
     }
 
-    public static function installSkeletonFiles(Event $event)
+    /**
+     * update the javascript files
+     *
+     * @param Event $event
+     */
+    public static function installJavascriptFiles(Event $event)
     {
         $fs = new Filesystem();
 
