@@ -41,10 +41,17 @@ class ScriptHandler
         $pagesDir = $options['cito-pages-dir'];
         $fs = new Filesystem();
 
-        $fs->copy(__DIR__ . '/../Resources/config/packages/cito.yaml', $configDir . '/packages/cito.yaml', true);
-        $fs->copy(__DIR__ . '/../Resources/config/routes/cito.yaml', $configDir . '/routes/cito.yaml', true);
+        if(!file_exists($configDir . '/packages/cito.yaml')) {
+            $fs->copy(__DIR__ . '/../Resources/config/packages/cito.yaml', $configDir . '/packages/cito.yaml');
+        }
 
-        $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig', true);
+        if(!file_exists($configDir . '/routes/cito.yaml')) {
+            $fs->copy(__DIR__ . '/../Resources/config/routes/cito.yaml', $configDir . '/routes/cito.yaml');
+        }
+
+        if(!file_exists($pagesDir . '/index.html.twig')) {
+            $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig');
+        }
     }
 
     /**
@@ -123,6 +130,10 @@ class ScriptHandler
         $fs->copy(__DIR__ . '/../Skeleton/gulpfile.js', 'gulpfile.js', false);
         $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', false);
         $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
+
+        // Additional information
+        echo 'You can now do a yarn install for the javascript packages.';
+        echo 'You can use Gulp to compile sass, javascripts and more. (See gulpfile.js for more information)';
     }
 
     protected static function getOptions(Event $event)
