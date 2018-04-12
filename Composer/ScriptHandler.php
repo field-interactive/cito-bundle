@@ -93,6 +93,8 @@ class ScriptHandler
             $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
         }
 
+        $fs->copy(__DIR__ . '/../Resources/config/packages/framework.yaml', $configDir . '/packages/framework.yaml', true);
+
         // Add imagine config
         if (file_exists($configDir . '/packages/imagine.yaml')) {
             $imagineYaml = Yaml::parseFile($configDir . '/packages/imagine.yaml');
