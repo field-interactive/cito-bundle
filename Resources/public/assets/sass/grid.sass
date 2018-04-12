@@ -1,0 +1,25 @@
+/*Variable for Gap*/
+$gap: 20
+
+.row
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  margin: 0 -#{$gap / 2}px #{$gap}px
+
+  .col
+    flex-basis: 100%
+    padding: 0 #{$gap / 2}px
+
+    @media only screen and (min-width: 768px)
+      flex: 1
+
+    /* Example Classes */
+    &._55
+      flex: 5.5
+    &._45
+      flex: 4.5
+    &._20
+      flex: 2
+    &._80
+      flex: 8

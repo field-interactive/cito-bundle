@@ -1,1 +1,1 @@
-// Place your javascripts here
+console.log('It works!')

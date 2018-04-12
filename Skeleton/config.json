@@ -35,6 +35,7 @@
   "scripts": {
     "frontend": {
       "src": [
+        "./public/assets/js/observer.js",
         "./node_modules/jquery/dist/jquery.min.js",
         "./public/assets/js/default.js"
       ],

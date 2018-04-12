@@ -69,6 +69,12 @@ class ScriptHandler
         // Add public files
         if (!file_exists($publicDir . '/.htaccess')) {
             $fs->copy(__DIR__ . '/../Resources/public/.htaccess', $publicDir . '/.htaccess', true);
+            $fs->copy(__DIR__ . '/../Resources/public/assets/image/.gitkeep', $publicDir . '/assets/image/.gitkeep');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/image/default.js');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/js/observer.js', $publicDir . '/assets/image/observer.js');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/default.sass', $publicDir . '/assets/sass/default.sass');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/base.sass', $publicDir . '/assets/sass/base.sass');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/grid.sass', $publicDir . '/assets/sass/grid.sass');
         }
 
         // Add twig config
