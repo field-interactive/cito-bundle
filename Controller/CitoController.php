@@ -17,9 +17,7 @@ class CitoController extends Controller
     }
 
     /**
-     * The 'CatchAllAction' every other action/route must be above!!
-     *
-     * @Route("/{url}", name="field_cito_z", requirements={"url": "(.+)?"})
+     * @Route("/{url}", name="field_cito_z", requirements={"url": "((?!_wdt|_profiler|_error).+)?"})
      */
     public function zAction(Request $request, $url)
     {

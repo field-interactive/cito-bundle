@@ -45,8 +45,8 @@ class ScriptHandler
             $fs->copy(__DIR__ . '/../Resources/config/packages/cito.yaml', $configDir . '/packages/cito.yaml');
         }
 
-        if(!file_exists($configDir . '/routes/cito.yaml')) {
-            $fs->copy(__DIR__ . '/../Resources/config/routes/cito.yaml', $configDir . '/routes/cito.yaml');
+        if(!file_exists($configDir . '/routes/z_cito.yaml')) {
+            $fs->copy(__DIR__ . '/../Resources/config/routes/z_cito.yaml', $configDir . '/routes/z_cito.yaml');
         }
 
         if(!file_exists($pagesDir . '/index.html.twig')) {
@@ -70,8 +70,8 @@ class ScriptHandler
         if (!file_exists($publicDir . '/.htaccess')) {
             $fs->copy(__DIR__ . '/../Resources/public/.htaccess', $publicDir . '/.htaccess', true);
             $fs->copy(__DIR__ . '/../Resources/public/assets/image/.gitkeep', $publicDir . '/assets/image/.gitkeep');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/image/default.js');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/js/observer.js', $publicDir . '/assets/image/observer.js');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/js/default.js');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/js/observer.js', $publicDir . '/assets/js/observer.js');
             $fs->copy(__DIR__ . '/../Resources/public/assets/sass/default.sass', $publicDir . '/assets/sass/default.sass');
             $fs->copy(__DIR__ . '/../Resources/public/assets/sass/base.sass', $publicDir . '/assets/sass/base.sass');
             $fs->copy(__DIR__ . '/../Resources/public/assets/sass/grid.sass', $publicDir . '/assets/sass/grid.sass');
