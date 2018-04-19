@@ -26,7 +26,7 @@ class ScriptHandler
         'symfony-bin-dir' => 'bin',
         'symfony-public-dir' => 'public',
         'symfony-config-dir' => 'config',
-        'symfony-template-dir' => 'template',
+        'symfony-template-dir' => 'templates',
         'cito-pages-dir' => 'pages',
         'cito-themes-dir' => 'themes',
     );

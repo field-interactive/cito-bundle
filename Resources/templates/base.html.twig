@@ -1,3 +1,4 @@
+{% htmlcompress %}
 <!DOCTYPE html>
 {# cito #}
 <html>
@@ -10,7 +11,7 @@
     <link href="{{ asset('assets/build/main/css/default.css') }}" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
 </head>
-<body class="{{ (body_class is defined) ? body_class : '' }}">
+<body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
 {% block body %}{% endblock %}
 <script src="{{ asset('assets/build/main/js/default.js') }}"></script>
 {% block javascripts %}{% endblock %}
@@ -25,3 +26,4 @@
 </script>
 </body>
 </html>
+{% endhtmlcompress %}
