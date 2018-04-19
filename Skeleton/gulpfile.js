@@ -14,13 +14,56 @@ var gulp  = require('gulp'),
     del = require('del'),
     ms = require('merge-stream'),
     rfi = require ('gulp-real-favicon'),
-    fs = require('fs');
+    fs = require('fs'),
+    workboxBuild = require('workbox-build');
 
 /* Config */
 var config = require('./config.json'),
     assetsPath = config.assetsPath;
 
 /* Tasks */
+gulp.task('service-worker', () => {
+    return workboxBuild.generateSW({
+        globDirectory: 'public',
+        globPatterns: [
+            '**/build/**/*.{js.gz,css.gz,js,css,otf,eot,svg,ttf,woff,woff2,png}'
+        ],
+        swDest: 'public/sw.js',
+        skipWaiting: true,
+        clientsClaim: true,
+        runtimeCaching: [
+            {
+                urlPattern: /\.(?:png|jpg|jpeg|svg|gif)$/,
+                handler: 'staleWhileRevalidate',
+                options: {
+                    expiration: {
+                        maxEntries: 50,
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200]
+                    }
+                },
+            },/*
+            // Change the Domain for external fetched data
+            {
+                urlPattern: new RegExp('^https://cors\.example\.com/'),
+                handler: 'staleWhileRevalidate',
+                options: {
+                    cacheName: 'sitecache',
+                    expiration: {
+                        maxEntries: 5,
+                        maxAgeSeconds: 60,
+                    },
+                    cacheableResponse: {
+                        statuses: [0, 200],
+                        headers: {'x-test': 'true'},
+                    }
+                }
+            }*/
+        ],
+    });
+});
+
 gulp.task('fonts', function () {
     return gulp.src(config.fonts.src)
         .pipe(gulp.dest(config.publicPath + '/' + config.fonts.dest));
@@ -93,7 +136,8 @@ gulp.task('default',
         'clean',
         'fonts',
         'scripts',
-        'styles'
+        'styles',
+        'service-worker'
     )
 );
 
@@ -124,7 +168,8 @@ gulp.task('deploy',
         'favicon',
         'deploy:scripts',
         'deploy:styles',
-        'compress'
+        'compress',
+        'service-worker'
     )
 );
 

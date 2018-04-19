@@ -44,3 +44,8 @@ services:
             $assetDir: "%kernel.project_dir%/public"
         tags:
             - { name: twig.extension }
+
+    nochso.html_compress_extension:
+        class: nochso\HtmlCompressTwig\Extension
+        tags:
+            - { name: twig.extension }

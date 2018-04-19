@@ -62,7 +62,57 @@ DirectoryIndex index.php
         # When mod_rewrite is not available, we instruct a temporary redirect of
         # the start page to the front controller explicitly so that the website
         # and the generated links can still be used.
-        RedirectMatch 307 ^/$ /index.php/
+        RedirectMatch 302 ^/$ /index.php/
         # RedirectTemp cannot be used instead
     </IfModule>
 </IfModule>
+
+# development access restriction
+<IfDefine !DEVELOPMENT>
+    <IfModule mod_headers.c>
+
+        Header unset Last-Modified
+
+        Header unset ETag
+        FileETag None
+
+        Header append Cache-Control "public"
+
+        <FilesMatch "\.(js|css|xml|gz)$">
+            Header append Vary: Accept-Encoding
+        </FilesMatch>
+
+    </IfModule>
+
+    FileETag None
+
+    <IfModule mod_expires.c>
+
+        <FilesMatch "\.(gif|jpg|jpeg|png|swf|css|js|html?|xml|txt|ico|gz)$">
+            ExpiresActive On
+            ExpiresDefault "access plus 10 years"
+        </FilesMatch>
+
+    </IfModule>
+</IfDefine>
+
+# gzip for css/js
+
+# adjust response headers for gzipped css files
+<FilesMatch "\.css\.gz$">
+    AddEncoding gzip .gz
+    ForceType "text/css"
+</FilesMatch>
+
+# adjust response headers for gzipped js files
+<FilesMatch "\.js\.gz$">
+    AddEncoding gzip .gz
+    ForceType "application/javascript"
+</FilesMatch>
+
+# gzip for css/js
+# rewrite file if gzipped file exists
+RewriteCond %{HTTP:Accept-Encoding} gzip.*deflate|deflate.*gzip
+RewriteCond %{REQUEST_FILENAME} \.(css|js)$
+RewriteCond %{REQUEST_FILENAME}.gz -f
+RewriteRule ^.*$ %{REQUEST_URI}.gz [L]

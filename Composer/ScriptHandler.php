@@ -26,7 +26,9 @@ class ScriptHandler
         'symfony-bin-dir' => 'bin',
         'symfony-public-dir' => 'public',
         'symfony-config-dir' => 'config',
+        'symfony-template-dir' => 'template',
         'cito-pages-dir' => 'pages',
+        'cito-themes-dir' => 'themes',
     );
 
     /**
@@ -39,6 +41,8 @@ class ScriptHandler
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
         $pagesDir = $options['cito-pages-dir'];
+        $publicDir = $options['symfony-public-dir'];
+        $templateDir = $options['symfony-template-dir'];
         $fs = new Filesystem();
 
         if(!file_exists($configDir . '/packages/cito.yaml')) {
@@ -52,19 +56,6 @@ class ScriptHandler
         if(!file_exists($pagesDir . '/index.html.twig')) {
             $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig');
         }
-    }
-
-    /**
-     * update the configuration files
-     * @param Event $event
-     */
-    public static function installConfiguration(Event $event)
-    {
-        $options = static::getOptions($event);
-        $configDir = $options['symfony-config-dir'];
-        $pagesDir = $options['cito-pages-dir'];
-        $publicDir = $options['symfony-public-dir'];
-        $fs = new Filesystem();
 
         // Add public files
         if (!file_exists($publicDir . '/.htaccess')) {
@@ -77,12 +68,41 @@ class ScriptHandler
             $fs->copy(__DIR__ . '/../Resources/public/assets/sass/grid.sass', $publicDir . '/assets/sass/grid.sass');
         }
 
+        // Add Base.html.twig
+        $citoBase = false;
+        if (file_exists($templateDir . '/base.html.twig')) {
+            $baseFile = file_get_contents($templateDir . '/base.html.twig');
+            if (strpos($baseFile, '{{# cito #}}')) {
+                $citoBase = true;
+            }
+        }
+        if (!$citoBase) {
+            $fs->copy(__DIR__ . '/../Resources/templates/base.html.twig', $templateDir . '/base.html.twig');
+        }
+    }
+
+    /**
+     * update the configuration files
+     * @param Event $event
+     */
+    public static function installConfiguration(Event $event)
+    {
+        $options = static::getOptions($event);
+        $configDir = $options['symfony-config-dir'];
+        $pagesDir = $options['cito-pages-dir'];
+        $fs = new Filesystem();
+
         // Add twig config
         if (file_exists($configDir . '/packages/twig.yaml')) {
             $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
             $pagesDir = (strpos($pagesDir, 'kernel.project_dir')) ? $pagesDir : '%kernel.project_dir%/' . $pagesDir;
-            if (!empty($twigYaml) && is_array($twigYaml['twig']['paths']) && !in_array($pagesDir, $twigYaml['twig']['paths'])) {
-                $twigYaml['twig']['paths'][] = $pagesDir;
+            if (!empty($twigYaml)) {
+                if (is_array($twigYaml['twig']['paths'])) {
+                    if (!in_array($pagesDir, $twigYaml['twig']['paths'])) {
+                        $twigYaml['twig']['paths'][] = $pagesDir;
+                    }
+                }
+
                 $yaml = Yaml::dump($twigYaml);
                 $fs->remove($configDir . '/packages/twig.yaml');
                 $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
@@ -93,6 +113,7 @@ class ScriptHandler
             $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
         }
 
+        // Add Framwork
         $fs->copy(__DIR__ . '/../Resources/config/packages/framework.yaml', $configDir . '/packages/framework.yaml', true);
 
         // Add imagine config
@@ -123,6 +144,43 @@ class ScriptHandler
             $lines[] = "";
             $content = implode("\n", $lines);
             file_put_contents($configDir . '/bundles.php', $content);
+        }
+    }
+
+    public static function installTheme(Event $event)
+    {
+        $options = static::getOptions($event);
+        $configDir = $options['symfony-config-dir'];
+        $themesDir = $options['cito-themes-dir'];
+        $fs = new Filesystem();
+
+        if (file_exists($configDir . '/packages/twig.yaml')) {
+            $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
+            $themesDir = (strpos($themesDir, 'kernel.project_dir')) ? $themesDir : '%kernel.project_dir%/' . $themesDir;
+            if (!empty($twigYaml)) {
+                if (is_array($twigYaml['twig']['paths'])) {
+                    if (!in_array($themesDir, $twigYaml['twig']['paths'])) {
+                        $twigYaml['twig']['paths'][] = $themesDir;
+                    }
+                }
+
+                if (is_array($twigYaml['twig']['globals'])) {
+                    if (!in_array('theme', $twigYaml['twig']['globals'])) {
+                        $twigYaml['twig']['globals']['theme'] = '%theme%';
+                    }
+                    if (!in_array('theme_path', $twigYaml['twig']['globals'])) {
+                        $twigYaml['twig']['globals']['theme_path'] = '%kernel.project_dir%/themes/%theme%';
+                    }
+                }
+
+                $yaml = Yaml::dump($twigYaml);
+                $fs->remove($configDir . '/packages/twig.yaml');
+                $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
+            } elseif (empty($twigYaml)) {
+                $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
+            }
+        } else {
+            $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
         }
     }
 
