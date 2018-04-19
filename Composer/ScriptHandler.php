@@ -53,6 +53,10 @@ class ScriptHandler
             $fs->copy(__DIR__ . '/../Resources/config/routes/z_cito.yaml', $configDir . '/routes/z_cito.yaml');
         }
 
+        if(!file_exists($configDir . '/routes/imagine.yaml')) {
+            $fs->copy(__DIR__ . '/../Resources/config/routes/imagine.yaml', $configDir . '/routes/imagine.yaml');
+        }
+
         if(!file_exists($pagesDir . '/index.html.twig')) {
             $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig');
         }

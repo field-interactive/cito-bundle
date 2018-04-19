@@ -8,12 +8,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
     <title>{% block title %}{% endblock %}</title>
 
-    <link href="{{ asset('assets/build/main/css/default.css') }}" rel="stylesheet">
+    <link href="{{ asset('assets/build/css/default.css') }}" rel="stylesheet">
     {% block stylesheets %}{% endblock %}
 </head>
 <body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
 {% block body %}{% endblock %}
-<script src="{{ asset('assets/build/main/js/default.js') }}"></script>
+<script src="{{ asset('assets/build/js/default.js') }}"></script>
 {% block javascripts %}{% endblock %}
 <script type="application/javascript">
     if (location.protocol === 'https:' || location.hostname === "localhost" || location.hostname === "127.0.0.1") {
