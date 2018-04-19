@@ -75,20 +75,7 @@ Set the class and the id of the `<body>` tag.
 
 ## JavaScripts and Gulp
 ### Lazyload
-Loads pictures, when they come in to the display. You only have to add the `observer.js` JavaScript file in to the
-JavaScripts block.
-
-    {% block javascripts %}
-        <script type="text/javascript" src="{{ asset( 'assets/js/observer.js' ) }}"></script>
-    {% endblock %}
-
-If you added JavaScript to the JavaScript-Block in the `base.html.twig` you have to add `{{ parent() }}` in the
-page JavaScript-Block.
-
-    {% block javascripts %}
-        <script type="text/javascript" src="{{ asset( 'assets/js/observer.js' ) }}"></script>
-        {{ parent() }}
-    {% endblock %}
+[vanilla lazyload](https://github.com/verlok/lazyload)
 
 ### ServiceWorker
 We've added a google [serviceworker](https://developers.google.com/web/tools/workbox/)
