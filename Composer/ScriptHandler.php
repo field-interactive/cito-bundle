@@ -75,7 +75,7 @@ class ScriptHandler
         $citoBase = false;
         if (file_exists($templateDir . '/base.html.twig')) {
             $baseFile = file_get_contents($templateDir . '/base.html.twig');
-            if (strpos($baseFile, '{{# cito #}}')) {
+            if (strpos($baseFile, '{# cito #}')) {
                 $citoBase = true;
             }
         }
