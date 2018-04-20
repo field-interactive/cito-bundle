@@ -1,8 +1,6 @@
 twig:
-    paths: ['%kernel.project_dir%/templates', '%kernel.project_dir%/pages', '%kernel.project_dir%/themes/%theme%']
+    paths: ['%kernel.project_dir%/templates', '%kernel.project_dir%/pages']
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
         assets: '%kernel.project_dir%/assets/'
-        theme: '%theme%'
-        theme_path: '%kernel.project_dir%/themes/%theme%'

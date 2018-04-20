@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: timkompernass
- * Date: 26.03.2018
- * Time: 11:41
- */
 
 namespace FieldInteractive\CitoBundle\DependencyInjection;
 

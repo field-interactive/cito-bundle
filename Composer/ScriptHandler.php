@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: timkompernass
- * Date: 26.03.2018
- * Time: 15:25
- */
 
 namespace FieldInteractive\CitoBundle\Composer;
 
@@ -167,7 +161,7 @@ class ScriptHandler
         $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
 
         // Additional information
-        echo 'You can now do a yarn install for the javascript packages.\n';
+        echo 'You can now do a yarn install for the javascript packages.';
         echo 'You can use Gulp to compile sass, javascripts and more. (See gulpfile.js for more information)';
     }
 
