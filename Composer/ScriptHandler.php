@@ -28,15 +28,12 @@ class ScriptHandler
         'symfony-config-dir' => 'config',
         'symfony-template-dir' => 'templates',
         'cito-pages-dir' => 'pages',
-        'cito-themes-dir' => 'themes',
     );
 
     /**
-     * Updated the required files.
-     *
      * @param Event $event
      */
-    public static function installRequiredFiles(Event $event)
+    public static function updateTemplateFiles(Event $event)
     {
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
@@ -45,151 +42,120 @@ class ScriptHandler
         $templateDir = $options['symfony-template-dir'];
         $fs = new Filesystem();
 
-        if(!file_exists($configDir . '/packages/cito.yaml')) {
-            $fs->copy(__DIR__ . '/../Resources/config/packages/cito.yaml', $configDir . '/packages/cito.yaml');
-        }
-
-        if(!file_exists($configDir . '/routes/z_cito.yaml')) {
-            $fs->copy(__DIR__ . '/../Resources/config/routes/z_cito.yaml', $configDir . '/routes/z_cito.yaml');
-        }
-
-        if(!file_exists($configDir . '/routes/imagine.yaml')) {
-            $fs->copy(__DIR__ . '/../Resources/config/routes/imagine.yaml', $configDir . '/routes/imagine.yaml');
-        }
-
-        if(!file_exists($pagesDir . '/index.html.twig')) {
+        if (!$fs->exists($pagesDir . '/index.html.twig')) {
             $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig');
         }
 
-        // Add public files
-        if (!file_exists($publicDir . '/.htaccess')) {
-            $fs->copy(__DIR__ . '/../Resources/public/.htaccess', $publicDir . '/.htaccess', true);
-            $fs->copy(__DIR__ . '/../Resources/public/assets/image/.gitkeep', $publicDir . '/assets/image/.gitkeep');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/js/default.js');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/default.sass', $publicDir . '/assets/sass/default.sass');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/base.sass', $publicDir . '/assets/sass/base.sass');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/grid.sass', $publicDir . '/assets/sass/grid.sass');
-        }
-
-        // Add Base.html.twig
         $citoBase = false;
-        if (file_exists($templateDir . '/base.html.twig')) {
+        if ($fs->exists($templateDir . '/base.html.twig')) {
             $baseFile = file_get_contents($templateDir . '/base.html.twig');
             if (strpos($baseFile, '{# cito #}')) {
                 $citoBase = true;
             }
         }
         if (!$citoBase) {
-            $fs->copy(__DIR__ . '/../Resources/templates/base.html.twig', $templateDir . '/base.html.twig');
+            $fs->copy(__DIR__ . '/../Resources/templates/base.html.twig', $templateDir . '/base.html.twig', true);
         }
+
+        // Add public files
+        if (!$fs->exists($publicDir . '/.htaccess')) {
+            $fs->copy(__DIR__ . '/../Resources/public/.htaccess', $publicDir . '/.htaccess', true);
+        }
+        if (!$fs->exists($publicDir . '/assets/js/default.js')) {
+            $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/js/default.js');
+        }
+        if (!$fs->exists($publicDir . '/assets/js/default.js')) {
+            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/default.sass', $publicDir . '/assets/sass/default.sass');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/base.sass', $publicDir . '/assets/sass/base.sass');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/grid.sass', $publicDir . '/assets/sass/grid.sass');
+        }
+        $fs->mkdir($publicDir . '/assets/image');
     }
 
     /**
-     * update the configuration files
      * @param Event $event
      */
-    public static function installConfiguration(Event $event)
-    {
-        $options = static::getOptions($event);
-        $configDir = $options['symfony-config-dir'];
-        $pagesDir = $options['cito-pages-dir'];
-        $fs = new Filesystem();
+     public static function installConfiguration(Event $event)
+     {
+         $options = static::getOptions($event);
+         $configDir = $options['symfony-config-dir'];
+         $pagesDir = $options['cito-pages-dir'];
+         $fs = new Filesystem();
 
-        // Add twig config
-        if (file_exists($configDir . '/packages/twig.yaml')) {
-            $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
-            $pagesDir = (strpos($pagesDir, 'kernel.project_dir')) ? $pagesDir : '%kernel.project_dir%/' . $pagesDir;
-            if (!empty($twigYaml)) {
-                if (is_array($twigYaml['twig']['paths'])) {
-                    if (!in_array($pagesDir, $twigYaml['twig']['paths'])) {
-                        $twigYaml['twig']['paths'][] = $pagesDir;
-                    }
-                }
+         if(!$fs->exists($configDir . '/packages/cito.yaml')) {
+             $fs->copy(__DIR__ . '/../Resources/config/packages/cito.yaml', $configDir . '/packages/cito.yaml');
+         }
+         if(!$fs->exists($configDir . '/routes/z_cito.yaml')) {
+             $fs->copy(__DIR__ . '/../Resources/config/routes/z_cito.yaml', $configDir . '/routes/z_cito.yaml');
+         }
 
-                $yaml = Yaml::dump($twigYaml);
-                $fs->remove($configDir . '/packages/twig.yaml');
-                $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
-            } elseif (empty($twigYaml)) {
-                $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
-            }
-        } else {
-            $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
-        }
+         if(!$fs->exists($configDir . '/routes/imagine.yaml')) {
+             $fs->copy(__DIR__ . '/../Resources/config/routes/imagine.yaml', $configDir . '/routes/imagine.yaml');
+         }
 
-        // Add Framwork
-        $fs->copy(__DIR__ . '/../Resources/config/packages/framework.yaml', $configDir . '/packages/framework.yaml', true);
+         // twig config
+         if ($fs->exists($configDir . '/packages/twig.yaml') && !empty(Yaml::parseFile($configDir . '/packages/twig.yaml'))) {
+             $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
+             $pagesDir = (strpos($pagesDir, 'kernel.project_dir')) ? $pagesDir : '%kernel.project_dir%/' . $pagesDir;
 
-        // Add imagine config
-        if (file_exists($configDir . '/packages/imagine.yaml')) {
-            $imagineYaml = Yaml::parseFile($configDir . '/packages/imagine.yaml');
-            if (!empty($imagineYaml) && is_array($imagineYaml['liip_imagine']['filter_sets']) && !in_array('picture_macro', $imagineYaml['liip_imagine']['filter_sets'])) {
-                $picture_macro = Yaml::parseFile(__DIR__ . '/../Resources/config/packages/imagine.yaml')['liip_imagine']['filter_sets'];
-                $imagineYaml['liip_imagine']['filter_sets']['picture_macro'] = $picture_macro['picture_macro'];
-                $yaml = Yaml::dump($imagineYaml, 9);
-                $fs->remove($configDir . '/packages/imagine.yaml');
-                $fs->dumpFile($configDir . '/packages/imagine.yaml', $yaml);
-            } elseif (empty($imagineYaml)) {
-                $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
-            }
-        } else {
-            $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
-        }
+             if (!array_key_exists('paths', $twigYaml['twig']) || !is_array($twigYaml['twig']['paths']) || !in_array($pagesDir, $twigYaml['twig']['paths'])) {
+                 $twigYaml['twig']['paths'][] = $pagesDir;
+             }
+             // safe new twig.yaml
+             $yaml = Yaml::dump($twigYaml, 99);
+             $fs->remove($configDir . '/packages/twig.yaml');
+             $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
 
-        // Add imaginebundle to bundles.php
-        $contents = require $configDir . '/bundles.php';
-        if (!array_key_exists("Liip\ImagineBundle\LiipImagineBundle", $contents)) {
-            $content = file_get_contents($configDir . '/bundles.php');
-            $lines = explode("\n", $content);
-            array_pop($lines);
-            array_pop($lines);
-            $lines[] = "\tLiip\ImagineBundle\LiipImagineBundle::class => ['all' => true],";
-            $lines[] = "];";
-            $lines[] = "";
-            $content = implode("\n", $lines);
-            file_put_contents($configDir . '/bundles.php', $content);
-        }
-    }
+         } else {
+             $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
+         }
 
-    public static function installTheme(Event $event)
-    {
-        $options = static::getOptions($event);
-        $configDir = $options['symfony-config-dir'];
-        $themesDir = $options['cito-themes-dir'];
-        $fs = new Filesystem();
+         // framework config
+         if ($fs->exists($configDir . '/packages/framework.yaml') && !empty(Yaml::parseFile($configDir . '/packages/framework.yaml'))) {
+             $frameworkYaml = Yaml::parseFile($configDir . '/packages/framework.yaml');
+             if (!array_key_exists('assets', $frameworkYaml['framework']) || !is_array($frameworkYaml['framework']['assets']) || !in_array('json_manifest_path', $frameworkYaml['framework']['assets'])) {
+                 $frameworkYaml['framework']['assets'] = ['json_manifest_path' => '%kernel.project_dir%/rev-manifest.json'];
+             }
+             // safe new framework.yaml
+             $yaml = Yaml::dump($frameworkYaml, 99);
+             $fs->remove($configDir . '/packages/framework.yaml');
+             $fs->dumpFile($configDir . '/packages/framework.yaml', $yaml);
 
-        if (file_exists($configDir . '/packages/twig.yaml')) {
-            $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
-            $themesDir = (strpos($themesDir, 'kernel.project_dir')) ? $themesDir : '%kernel.project_dir%/' . $themesDir;
-            if (!empty($twigYaml)) {
-                if (is_array($twigYaml['twig']['paths'])) {
-                    if (!in_array($themesDir, $twigYaml['twig']['paths'])) {
-                        $twigYaml['twig']['paths'][] = $themesDir;
-                    }
-                }
+         } else {
+             $fs->copy(__DIR__ . '/../Resources/config/packages/framework.yaml', $configDir . '/packages/framework.yaml', true);
+         }
 
-                if (is_array($twigYaml['twig']['globals'])) {
-                    if (!in_array('theme', $twigYaml['twig']['globals'])) {
-                        $twigYaml['twig']['globals']['theme'] = '%theme%';
-                    }
-                    if (!in_array('theme_path', $twigYaml['twig']['globals'])) {
-                        $twigYaml['twig']['globals']['theme_path'] = '%kernel.project_dir%/themes/%theme%';
-                    }
-                }
+         // imagine config
+         if ($fs->exists($configDir . '/packages/imagine.yaml') && !empty(Yaml::parseFile($configDir . '/packages/imagine.yaml'))) {
+             $imagineYaml = Yaml::parseFile($configDir . '/packages/imagine.yaml');
+             if (!array_key_exists('filter_sets', $imagineYaml['liip_imagine']) || !is_array($imagineYaml['liip_imagine']['filter_sets']) || !in_array('picture_macro', $imagineYaml['liip_imagine']['filter_sets'])) {
+                 $picture_macro = Yaml::parseFile(__DIR__ . '/../Resources/config/packages/imagine.yaml')['liip_imagine']['filter_sets'];
+                 $imagineYaml['liip_imagine']['filter_sets']['picture_macro'] = $picture_macro['picture_macro'];
+             }
+             // safe new imagine.yaml
+             $yaml = Yaml::dump($imagineYaml, 99);
+             $fs->remove($configDir . '/packages/imagine.yaml');
+             $fs->dumpFile($configDir . '/packages/imagine.yaml', $yaml);
+         } else {
+             $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
+         }
 
-                $yaml = Yaml::dump($twigYaml);
-                $fs->remove($configDir . '/packages/twig.yaml');
-                $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
-            } elseif (empty($twigYaml)) {
-                $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
-            }
-        } else {
-            $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
-        }
-    }
+         // Add imaginebundle to bundles.php
+         $contents = require $configDir . '/bundles.php';
+         if (!array_key_exists("Liip\ImagineBundle\LiipImagineBundle", $contents)) {
+             $content = file_get_contents($configDir . '/bundles.php');
+             $lines = explode("\n", $content);
+             array_pop($lines);
+             array_pop($lines);
+             $lines[] = "\tLiip\ImagineBundle\LiipImagineBundle::class => ['all' => true],";
+             $lines[] = "];";
+             $lines[] = "";
+             $content = implode("\n", $lines);
+             file_put_contents($configDir . '/bundles.php', $content);
+         }
+     }
 
     /**
-     * update the javascript files
-     *
      * @param Event $event
      */
     public static function installJavascriptFiles(Event $event)
@@ -201,7 +167,7 @@ class ScriptHandler
         $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
 
         // Additional information
-        echo 'You can now do a yarn install for the javascript packages.';
+        echo 'You can now do a yarn install for the javascript packages.\n';
         echo 'You can use Gulp to compile sass, javascripts and more. (See gulpfile.js for more information)';
     }
 
