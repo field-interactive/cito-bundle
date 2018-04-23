@@ -38,6 +38,13 @@ class CitoExtension extends \Twig_Extension
         ];
     }
 
+    public function getFilters()
+    {
+        return array(
+            new \Twig_SimpleFilter('ratio', [$this, 'imageRatioAspectFilter']),
+        );
+    }
+
     /**
      * @param $path
      * @param null  $uri
@@ -140,4 +147,21 @@ class CitoExtension extends \Twig_Extension
             return $uri.'/index.html.twig';
         }
     }
+
+    /**
+     * @return float
+     */
+    public function imageRatioAspectFilter($file)
+    {
+        // TODO: Inject resource path
+        $file = $this->projectDir . 'public/'. $file;
+        if(is_file($file)){
+            $sizes = array_slice(getimagesize($file), 0, 2);
+            return round($sizes[0] / $sizes[1], 4);
+        } else {
+            return 1;
+        }
+    }
+
+
 }
