@@ -29,6 +29,7 @@ class CitoController extends Controller
             return $this->render($url.'/index.html.twig');
         }
 
-        throw $this->createNotFoundException($url.' not found');
+        $errMsg = $url.' not found! Searched for '.$this->pagesPath.$url.'.html.twig and '.$this->pagesPath.$url.'/index.html.twig!';
+        throw $this->createNotFoundException($errMsg);
     }
 }

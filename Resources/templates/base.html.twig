@@ -1,28 +1,53 @@
 <!DOCTYPE html>
 {# cito #}
-<html>
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noarchive">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
     <title>{% block title %}{% endblock %}</title>
 
-    <link href="{{ asset('assets/build/css/default.css') }}" rel="stylesheet">
-    {% block stylesheets %}{% endblock %}
+    <meta property="og:title" content="{% block('title') %}" />
+    <meta property="og:image" content="{% block ogimage %}{% endblock %}" />
+    <meta name="description" content="{% block description %}{% endblock %}" />
+    <meta property="og:description" content="{% block description %}{% endblock %}" />
+
+
+
+    <link href="{{ asset('assets/build/css/main.css') }}" rel="stylesheet">
+    {% block stylesheets %}
+    {% endblock %}
 </head>
 <body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
-{% block body %}{% endblock %}
-<script src="{{ asset('assets/build/js/default.js') }}"></script>
-{% block javascripts %}{% endblock %}
-<script type="application/javascript">
-    if (location.protocol === 'https:' || location.hostname === "localhost" || location.hostname === "127.0.0.1") {
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js');
-            });
+
+    {% block body %}
+    {% endblock %}
+
+    <script src="{{ asset('assets/build/js/main.js') }}"></script>
+    {% block javascripts %}
+    {% endblock %}
+    <script type="application/javascript">
+        (function (w, d) {
+            var b = d.getElementsByTagName('body')[0];
+            var s = d.createElement("script")
+            s.async = true
+            s.defer = true
+            var v = !("IntersectionObserver" in w) ? "8.7.1" : "10.5.2"
+            s.src = "https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/" + v + "/lazyload.min.js"
+            w.lazyLoadOptions = [{
+                elements_selector: '.bg'
+            }, {} ];
+            b.appendChild(s)
+        }(window, document))
+
+        if (location.protocol === 'https:' || location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js');
+                });
+            }
         }
-    }
-</script>
+    </script>
 </body>
-</html>
 </html>

@@ -2,7 +2,8 @@
 
 ---
 
-## Installation
+## Setup
+### Installation
 - clone the completed project from Gitlab
     - `git clone https://gitlab.com/myboom/cito-symfony.git`
 - or create a new project with composer
@@ -10,11 +11,50 @@
 
 To install the PHP and JS packages you need Composer and Yarn.
 
+### Configuration
+If you install only the package and not the skeleton, you have to create the directories and files manually.
+1. Create a folder `pages` in your project-root. This will be the Directory, where you store your content pages.
+1. Create a config file `cito.yaml` in `config/packages`. This file contains:
+
+    cito:
+        pages: '%kernel.project_dir%/pages/'
+
+1. Create a routes config `z_cito.yaml` in `config/routes`. This file contains:
+
+    field_interactive_cito:
+        resource: "@CitoBundle/Resources/config/routes.yaml"
+    
+1. Add the string `'%kernel.project_dir%/pages'` to `paths` in `config/packages/twig.yaml`.
+1. Add the `picture_macro` to `filter_sets` in `config/packages/imagine.yaml`. The content of `picture_macro`:
+    
+    jpeg_quality: 85
+        png_compression_level: 8
+        filters:            
+            relative_resize:
+                widen: 600
+
+    1. If `config/packages/imagine.yaml` is missing you can copy the file from 
+    `vendor/field-interactive/cito-bundle/Resources/config/packages/imagine.yaml`.
+
+1. If the file `config/routes/imagine.yaml` does not exist, add it and set the content:
+
+    _liip_imagine:
+        resource: "@LiipImagineBundle/Resources/config/routing.yaml"
+
 ---
 
 ## Twig Functions, Filters and Macros
+### CitoController
+Search the page to the current route, if you did not define the route. The controller is searching
+for the page in the `pages` folder in your project-root. 
+
+Example: `/example/page`
+
+The controller search for `%project_dir%/pages/example/page.html.twig` and 
+`%project_dir%/pages/example/page/index.html.twig`.
+
 ### Navigation
-Adds an 'active' class to the current link item in the navigation list. The navigation needs to be a simple `<ul>` list,
+Adds an 'active' class to the current link item in the navigation list. The navigation needs to be a simple `<ul> <li>` list,
 with an `<a>` tag inside.
 
     {{ navigation('path/to/nav.html') }}
@@ -24,6 +64,7 @@ You can add a parameters array:
     - `{{ navigation('path/to/nav.html', {'breadcrumbs': true}) }}`
 - range (int/array): generate the navigation from a level
     - `{{ navigation('path/to/nav.html', {'range': 2}) }}`
+    - `{{ navigation('path/to/nav.html', {'range': [2,4]}) }}`
 
 ### Page
 Loads a page object to get its blocks, link, path or name.
