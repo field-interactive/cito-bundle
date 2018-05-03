@@ -23,7 +23,7 @@ class CitoExtension extends Extension
         $container->setParameter('field_cito.dir.pages', $config['pages']);
 
         $this->addAnnotatedClassesToCompile(array(
-            'FieldInteractive\\Cito\\Controller\\CitoController',
+            'FieldInteractive\\CitoBundle\\Controller\\CitoController',
         ));
     }
 

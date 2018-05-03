@@ -19,7 +19,7 @@
             "email": "m.harding@field-interactive.com"
         }
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
         "sensio/framework-extra-bundle": "^5.0",
@@ -30,7 +30,7 @@
         "symfony/yaml": "^4.0",
         "symfony/filesystem": "^3.0|^4.0",
         "symfony/process": "^3.0|^4.0",
-        "liip/imagine-bundle": "^2@dev",
+        "liip/imagine-bundle": "^2.0",
         "composer/ca-bundle": "^1",
         "nochso/html-compress-twig": "^2.0",
         "swiftmailer/swiftmailer": "^6.0"

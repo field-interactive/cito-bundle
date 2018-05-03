@@ -12,7 +12,7 @@
 To install the PHP and JS packages you need Composer and Yarn.
 
 ### Configuration
-If you install only the package and not the skeleton, you have to create the directories and files manually.
+If you install only the package and not the skeleton, you have to create the directories and files by hand.
 1. Create a folder `pages` in your project-root. This will be the Directory, where you store your content pages.
 1. Create a config file `cito.yaml` in `config/packages`. This file contains:
 
