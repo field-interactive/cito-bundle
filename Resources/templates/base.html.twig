@@ -1,32 +1,71 @@
 <!DOCTYPE html>
 {# cito #}
 <html lang="de">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="robots" content="noarchive">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+    {% block head %}
 
     <title>{% block title %}{% endblock %}</title>
 
-    <meta property="og:title" content="{% block('title') %}" />
-    <meta property="og:image" content="{% block ogimage %}{% endblock %}" />
-    <meta name="description" content="{% block description %}{% endblock %}" />
-    <meta property="og:description" content="{% block description %}{% endblock %}" />
+    <meta name="description" content="{% block description %}{% endblock %}">
 
+    <meta property="og:title" content="{{ block('title') }}">
+    <meta property="og:image" content="{% block ogimage %}{% endblock %}">
+    <meta property="og:description" content="{{ block('description') }}">
 
+    <meta charset="UTF-8">
 
-    <link href="{{ asset('assets/build/css/main.css') }}" rel="stylesheet">
-    {% block stylesheets %}
+    {% block canonical %}{% endblock %}
+
+    <meta name="robots" content="noarchive">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    {% include 'partials/favicon.html.twig' %}
+
+    <meta name="theme-color" content="#f2f2f2">
+    <meta name="msapplication-navbutton-color" content="#f2f2f2">
+    <meta name="msapplication-TileColor" content="#f2f2f2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <link rel="stylesheet" href="{{ asset('assets/build/css/main.css') }}">
+    <link rel="preload" href="{{ asset('assets/build/css/main.css') }}" as="style">
+    
+    {% block stylesheets %}{% endblock %}
+
     {% endblock %}
 </head>
+
 <body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
 
-    {% block body %}
-    {% endblock %}
+    <header id="header">
+        {% block header %}
+
+            {% include 'partials/headers/navSlideRightHeader.html.twig' %}
+
+        {% endblock %}
+    </header>
+
+    <main id="main">
+        {% block body %}{% endblock %}
+    </main>
+
+    <footer id="footer">
+        {% block footer %}
+
+            {% include 'partials/footer.html.twig' %}
+
+        {% endblock %}
+    </footer>
+
+    <div style="display: none">
+        {{ asset('assets/image/layout/logo.svg')|inline_svg()|raw }}
+    </div>
 
     <script src="{{ asset('assets/build/js/main.js') }}"></script>
-    {% block javascripts %}
-    {% endblock %}
+
+    {% block javascripts %}{% endblock %}
+
     <script type="application/javascript">
         (function (w, d) {
             var b = d.getElementsByTagName('body')[0];
@@ -36,7 +75,7 @@
             var v = !("IntersectionObserver" in w) ? "8.7.1" : "10.5.2"
             s.src = "https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/" + v + "/lazyload.min.js"
             w.lazyLoadOptions = [{
-                elements_selector: '.bg'
+                elements_selector: '.lazy'
             }, {} ];
             b.appendChild(s)
         }(window, document))
@@ -49,5 +88,7 @@
             }
         }
     </script>
+
 </body>
+
 </html>

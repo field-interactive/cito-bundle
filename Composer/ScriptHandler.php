@@ -48,7 +48,7 @@ class ScriptHandler
             }
         }
         if (!$citoBase) {
-            $fs->copy(__DIR__ . '/../Resources/templates/base.html.twig', $templateDir . '/base.html.twig', true);
+            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', true);
         }
 
         // Add public files
@@ -58,12 +58,13 @@ class ScriptHandler
         if (!$fs->exists($publicDir . '/assets/js/default.js')) {
             $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/js/default.js');
         }
-        if (!$fs->exists($publicDir . '/assets/js/default.js')) {
-            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/default.sass', $publicDir . '/assets/sass/default.sass');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/base.sass', $publicDir . '/assets/sass/base.sass');
-            $fs->copy(__DIR__ . '/../Resources/public/assets/sass/grid.sass', $publicDir . '/assets/sass/grid.sass');
+        if (!$fs->exists($publicDir . '/assets/sass/default.sass')) {
+            $fs->mirror(__DIR__ . '/../Resources/public/assets/sass/', $publicDir . '/assets/sass/');
         }
-        $fs->mkdir($publicDir . '/assets/image');
+        if (!$fs->exists($publicDir . '/assets/image/layout/logo.svg')) {
+            $fs->copy(__DIR__ . '/../Resources/public/assets/layout/logo.svg', $publicDir . '/assets/layout/logo.svg');
+        }
+
     }
 
     /**
