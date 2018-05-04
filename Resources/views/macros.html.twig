@@ -14,6 +14,6 @@
                 data-srcset="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }} 1x,
                 {{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  (default * 2)}}) }} 2x">
     {% endif %}
-    <img data-ratio="{{ path|ratio }}" data-src="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }}" alt="" style="width:auto;">
+    <img data-ratio="{{ path|ratio }}" data-src="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }}" alt="">
 </picture>
 {% endmacro %}

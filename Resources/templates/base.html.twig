@@ -30,7 +30,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/build/css/main.css') }}">
     <link rel="preload" href="{{ asset('assets/build/css/main.css') }}" as="style">
-    
+
     {% block stylesheets %}{% endblock %}
 
     {% endblock %}
@@ -46,9 +46,9 @@
         {% endblock %}
     </header>
 
-    <main id="main">
+    <section id="main">
         {% block body %}{% endblock %}
-    </main>
+    </section>
 
     <footer id="footer">
         {% block footer %}
