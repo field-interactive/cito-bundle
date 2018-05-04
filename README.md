@@ -7,7 +7,7 @@
 - clone the completed project from Gitlab
     - `git clone https://gitlab.com/myboom/cito-symfony.git`
 - or create a new project with composer
-    - `composer create-project field-interactive/cito-skeleton -s dev`
+    - `composer create-project field-interactive/cito-skeleton`
 
 To install the PHP and JS packages you need Composer and Yarn.
 
