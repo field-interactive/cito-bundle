@@ -59,12 +59,12 @@ class ScriptHandler
             $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/js/default.js');
         }
         if (!$fs->exists($publicDir . '/assets/sass/default.sass')) {
-            $fs->mirror(__DIR__ . '/../Resources/public/assets/sass/', $publicDir . '/assets/sass/');
+            $fs->mirror(__DIR__ . '/../Resources/public/assets/sass', $publicDir . '/assets/sass');
         }
         if (!$fs->exists($publicDir . '/assets/image/layout/logo.svg')) {
             $fs->copy(__DIR__ . '/../Resources/public/assets/layout/logo.svg', $publicDir . '/assets/layout/logo.svg');
         }
-
+        $fs->mkdir($publicDir . '/assets/fonts');
     }
 
     /**
