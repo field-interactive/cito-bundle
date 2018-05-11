@@ -2,6 +2,7 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     field_cito.dir.pages: '%kernel.project_dir%/pages/'
+    field_cito.dir.posts: '%kernel.project_dir%/public/posts/'
 
 services:
     # default configuration for services in *this* file
@@ -30,11 +31,19 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    FieldInteractive\CitoBundle\Service\SocialMedia:
+            public: true
+            arguments:
+                $socialMedia: "%social_media%"
+                $postsPath: "%field_cito.dir.posts%"
+            tags:
+                - { name: "SocialMediaService" }
+
     FieldInteractive\CitoBundle\Twig\CitoExtension:
         public: true
         arguments:
-            - "@request_stack"
-            - '%kernel.project_dir%/'
+            $request: '@request_stack'
+            $projectDir: '%kernel.project_dir%/'
         tags:
             - { name: twig.extension }
 
@@ -42,6 +51,13 @@ services:
         public: true
         arguments:
             $assetDir: "%kernel.project_dir%/public"
+        tags:
+            - { name: twig.extension }
+
+    FieldInteractive\CitoBundle\Twig\SocialMediaExtension:
+        public: true
+        arguments:
+            $postsPath: "%field_cito.dir.posts%"
         tags:
             - { name: twig.extension }
 

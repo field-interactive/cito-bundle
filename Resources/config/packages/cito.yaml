@@ -1,2 +1,3 @@
 cito:
     pages: '%kernel.project_dir%/pages/'
+    posts: '%kernel.project_dir%/public/posts/'

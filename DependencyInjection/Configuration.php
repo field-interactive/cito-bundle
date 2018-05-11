@@ -15,6 +15,7 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
             ->scalarNode('pages')->defaultValue('%kernel.project_dir%/pages/')->end()
+            ->scalarNode('posts')->defaultValue('%kernel.project_dir%/public/posts/')->end()
             ->end()
         ;
 

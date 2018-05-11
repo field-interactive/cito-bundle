@@ -21,6 +21,7 @@ class CitoExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
 
         $container->setParameter('field_cito.dir.pages', $config['pages']);
+        $container->setParameter('field_cito.dir.posts', $config['posts']);
 
         $this->addAnnotatedClassesToCompile(array(
             'FieldInteractive\\CitoBundle\\Controller\\CitoController',
