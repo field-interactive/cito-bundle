@@ -40,7 +40,7 @@ class SocialMediaExtension extends AbstractExtension
      */
     public function getFacebookPosts($name)
     {
-        $posts = file_get_contents($this->postsPath . $name . '/posts.json');
+        $posts = file_get_contents($this->postsPath . 'facebook/' . $name . '/posts.json');
         $posts = json_decode($posts, true);
 
         return $posts;

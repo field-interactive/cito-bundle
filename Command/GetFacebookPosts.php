@@ -33,12 +33,12 @@ class GetFacebookPosts extends Command
     {
         $user = $input->getArgument('user');
 
-        $p = $this->socialMediaService->getFacebookPosts($user);
-
-        if ($p) {
+        try {
+            $this->socialMediaService->getFacebookPosts($user);
             $output->writeln("Facebook posts loadet");
-        } else {
-            $output->writeln("No Facebook posts found");
+        } catch (\Exception $e) {
+            $output->writeln($e->getMessage());
         }
+
     }
 }

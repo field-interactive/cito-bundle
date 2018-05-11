@@ -19,10 +19,22 @@ class SocialMedia
         if (array_key_exists('facebook', $socialMedia)) {
             $this->facebook = $socialMedia['facebook'];
         }
+
+        if (array_key_exists('twitter', $socialMedia)) {
+            $this->twitter = $socialMedia['twitter'];
+        }
+
+        if (array_key_exists('facebook', $socialMedia)) {
+            $this->instagramm = $socialMedia['instagramm'];
+        }
     }
 
     public function getFacebookPosts($user = '')
     {
+        if (empty($this->facebook)) {
+            throw new \Exception('Facebook is not configured!');
+        }
+
         $fb = $this->facebook;
         if (!empty($user)) {
             if (array_key_exists($user, $this->facebook)) {
@@ -30,7 +42,7 @@ class SocialMedia
                 $fb = array();
                 $fb[$user] = $this->facebook[$user];
             } else {
-                return false; // throw Exception
+                throw new \Exception('User is not configured under facebook!');
             }
         }
 
@@ -82,8 +94,8 @@ class SocialMedia
                         if (!empty($image->full_picture)) {
                             $filename = $this->postsPath . $pageName . '/images/' . $post->id . '.jpg';
 
-                            if (!file_exists($this->postsPath . $pageName . '/images/')) {
-                                mkdir($this->postsPath . $pageName . '/images/', 0777, true);
+                            if (!file_exists($this->postsPath . 'facebook/' . $pageName . '/images/')) {
+                                mkdir($this->postsPath . 'facebook/' . $pageName . '/images/', 0777, true);
                             }
 
                             file_put_contents($filename, file_get_contents($image->full_picture));
@@ -118,18 +130,16 @@ class SocialMedia
                 }
 
                 if (!empty($fbPosts)) {
-                    $filename = $this->postsPath . $pageName . '/posts.json';
+                    $filename = $this->postsPath . 'facebook/' . $pageName . '/posts.json';
 
-                    if (!file_exists($this->postsPath . $pageName)) {
-                        mkdir($this->postsPath . $pageName, 0777, true);
+                    if (!file_exists($this->postsPath . 'facebook/' . $pageName)) {
+                        mkdir($this->postsPath . 'facebook/' . $pageName, 0777, true);
                     }
 
                     file_put_contents($filename, json_encode($fbPosts));
                 }
             }
         }
-
-        return true;
     }
 
     public function getTwitterPosts($user = '')
