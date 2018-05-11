@@ -92,7 +92,7 @@ class SocialMedia
                         $fbPosts[$iEntry]['img'] = false;
 
                         if (!empty($image->full_picture)) {
-                            $filename = $this->postsPath . $pageName . '/images/' . $post->id . '.jpg';
+                            $filename = $this->postsPath . 'facebook/' . $pageName . '/images/' . $post->id . '.jpg';
 
                             if (!file_exists($this->postsPath . 'facebook/' . $pageName . '/images/')) {
                                 mkdir($this->postsPath . 'facebook/' . $pageName . '/images/', 0777, true);
@@ -100,7 +100,7 @@ class SocialMedia
 
                             file_put_contents($filename, file_get_contents($image->full_picture));
 
-                            $fbPosts[$iEntry]['img'] = '/posts/' . $pageName . '/images/' . $post->id . '.jpg';
+                            $fbPosts[$iEntry]['img'] = '/posts/facebook/' . $pageName . '/images/' . $post->id . '.jpg';
                         }
 
                         $message = $post->message;
