@@ -24,7 +24,7 @@ class SocialMedia
             $this->twitter = $socialMedia['twitter'];
         }
 
-        if (array_key_exists('facebook', $socialMedia)) {
+        if (array_key_exists('instagramm', $socialMedia)) {
             $this->instagramm = $socialMedia['instagramm'];
         }
     }
