@@ -48,7 +48,7 @@ class ScriptHandler
             }
         }
         if (!$citoBase) {
-            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', true);
+            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/');
         }
 
         // Add public files
