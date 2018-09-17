@@ -3,6 +3,7 @@
 parameters:
     field_cito.dir.pages: '%kernel.project_dir%/pages/'
     field_cito.dir.posts: '%kernel.project_dir%/public/posts/'
+    social_media: []
 
 services:
     # default configuration for services in *this* file

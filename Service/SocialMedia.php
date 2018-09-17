@@ -2,161 +2,152 @@
 
 namespace FieldInteractive\CitoBundle\Service;
 
+use RZ\MixedFeed\Exception\CredentialsException;
+use RZ\MixedFeed\FacebookPageFeed;
+use RZ\MixedFeed\InstagramFeed;
+use RZ\MixedFeed\TwitterFeed;
+
 class SocialMedia
 {
     private $postsPath;
 
-    private $facebook = array();
+    private $facebook;
 
-    private $twitter = array();
+    private $twitter;
 
-    private $instagramm = array();
+    private $instagramm;
 
     public function __construct($socialMedia, $postsPath)
     {
         $this->postsPath = $postsPath;
 
         if (array_key_exists('facebook', $socialMedia)) {
-            $this->facebook = $socialMedia['facebook'];
+            foreach ($socialMedia['facebook'] as $name => $options) {
+                try {
+                    $this->facebook[$name] = new FacebookPageFeed($options['pageId'], $options['accessToken']);
+                } catch (CredentialsException $e) {
+                }
+            }
         }
 
         if (array_key_exists('twitter', $socialMedia)) {
-            $this->twitter = $socialMedia['twitter'];
+            foreach ($socialMedia['twitter'] as $name => $options) {
+                try {
+                    $this->twitter[$name] = new TwitterFeed($options['userId'], $options['consumerKey'], $options['consumerSecret'], $options['accessToken'], $options['accessTokenSecret']);
+                } catch (CredentialsException $e) {
+                }
+            }
         }
 
-        if (array_key_exists('instagramm', $socialMedia)) {
-            $this->instagramm = $socialMedia['instagramm'];
+        if (array_key_exists('instagram', $socialMedia)) {
+            foreach ($socialMedia['instagram'] as $name => $options) {
+                try {
+                    $this->instagram[$name] = new InstagramFeed($options['userId'], $options['accessToken']);
+                } catch (CredentialsException $e) {
+                }
+            }
         }
     }
 
-    public function getFacebookPosts($user = '')
+    /**
+     * @param null|string $page
+     * @param int $count
+     * @return array
+     * @throws \RZ\MixedFeed\Exception\FeedProviderErrorException
+     */
+    public function getFacebookPosts($page = null, $count = 10)
     {
         if (empty($this->facebook)) {
             throw new \Exception('Facebook is not configured!');
         }
 
         $fb = $this->facebook;
-        if (!empty($user)) {
-            if (array_key_exists($user, $this->facebook)) {
+        if (!empty($page)) {
+            if (array_key_exists($page, $this->facebook)) {
                 unset($fb);
                 $fb = array();
-                $fb[$user] = $this->facebook[$user];
+                $fb[$page] = $this->facebook[$page];
             } else {
                 throw new \Exception('User is not configured under facebook!');
             }
         }
 
-        foreach ($fb as $pageName => $page) {
-
-            //define fan page id
-            $facebook_page = $page['pageId'];
-
-            $access_token = $page['access_token'];
-
-            //use Facebook Graph API to retrieve albums' ID and count (no of images in album)
-            $string1 = file_get_contents('https://graph.facebook.com/' . $facebook_page . '/posts?access_token=' . $access_token);
-
-            //the Json file with the data contains the word "count" which is a reserved word in PHP, so I replaced it with "countx" (I know- very imaginative)
-            $string = str_replace("count", "countx", $string1);
-
-            //decoding the Json feed
-            $jdata = json_decode($string);
-
-            // somehow we get every item two times
-            $usedIds = array();
-
-            if (is_array($jdata->data)) {
-                $iEntry = 0;
-
-                foreach ($jdata->data as $post) {
-                    if (isset($usedIds[$post->id])) {
-                        continue;
-                    } else {
-                        $usedIds[$post->id] = $post->id;
-                    }
-                    if (isset($post->message)) {
-
-                        if (isset($post->type) && $post->type == 'video') {
-                            $fbPosts[$iEntry]['video'] = 'video';
-                        }
-
-                        $fbPosts[$iEntry]['date'] = date('d.m.Y', strtotime($post->created_time));
-
-                        /**
-                         * @author FS
-                         * Get pictures since it won't get queried any longer (july 2017)
-                         */
-                        $image = file_get_contents('https://graph.facebook.com/' . $post->id . '?fields=full_picture&access_token=' . $access_token);
-                        $image = json_decode($image);
-
-                        $fbPosts[$iEntry]['img'] = false;
-
-                        if (!empty($image->full_picture)) {
-                            $filename = $this->postsPath . 'facebook/' . $pageName . '/images/' . $post->id . '.jpg';
-
-                            if (!file_exists($this->postsPath . 'facebook/' . $pageName . '/images/')) {
-                                mkdir($this->postsPath . 'facebook/' . $pageName . '/images/', 0777, true);
-                            }
-
-                            file_put_contents($filename, file_get_contents($image->full_picture));
-
-                            $fbPosts[$iEntry]['img'] = '/posts/facebook/' . $pageName . '/images/' . $post->id . '.jpg';
-                        }
-
-                        $message = $post->message;
-                        $fbPosts[$iEntry]['message'] = $message;
-
-                        $length = 70;           // Modify for desired width
-                        if (strlen($message) <= $length) {
-                            $teaser = $message; // Do nothing
-                        } else {
-                            if (!($pos = strpos($message, ' ', $length))) {
-                                $pos = $length;
-                            }
-
-                            $teaser = substr($message, 0, $pos);
-                            $teaser .= ' ...';
-                        }
-
-                        $fbPosts[$iEntry]['teaser'] = $teaser;
-
-                        $fbPosts[$iEntry]['link'] = "http://www.facebook.com/" . str_replace('_', '/posts/', $post->id);
-
-                        $iEntry++;
-                        if ($iEntry >= $page['count']) {
-                            break;
-                        }
-                    }
-                }
-
-                if (!empty($fbPosts)) {
-                    $filename = $this->postsPath . 'facebook/' . $pageName . '/posts.json';
-
-                    if (!file_exists($this->postsPath . 'facebook/' . $pageName)) {
-                        mkdir($this->postsPath . 'facebook/' . $pageName, 0777, true);
-                    }
-
-                    file_put_contents($filename, json_encode($fbPosts));
-                }
-            }
+        $posts = [];
+        /**
+         * @var $feed FacebookPageFeed
+         */
+        foreach ($fb as $name => $feed) {
+            $post[$name] = $feed->getItems($count);
         }
-    }
 
-    public function getTwitterPosts($user = '')
-    {
-        // Todo: Implement
-    }
-
-    public function getInstagrammPosts($user = '')
-    {
-        // Todo: Implement
+        return $posts;
     }
 
     /**
-     * @return mixed
+     * @param null $page
+     * @param int $count
+     * @return array
+     * @throws \Exception
      */
-    public function getFacebook()
+    public function getTwitterTweets($page = null, $count = 10)
     {
-        return $this->facebook;
+        if (empty($this->twitter)) {
+            throw new \Exception('Twitter is not configured!');
+        }
+
+        $tw = $this->twitter;
+        if (!empty($page)) {
+            if (array_key_exists($page, $this->twitter)) {
+                unset($fb);
+                $tw = array();
+                $tw[$page] = $this->twitter[$page];
+            } else {
+                throw new \Exception('User is not configured under twitter!');
+            }
+        }
+
+        $posts = [];
+        /**
+         * @var $feed TwitterFeed
+         */
+        foreach ($tw as $name => $feed) {
+            $post[$name] = $feed->getItems($count);
+        }
+
+        return $posts;
+    }
+
+    /**
+     * @param null|string $page
+     * @param int $count
+     * @return array
+     * @throws \RZ\MixedFeed\Exception\FeedProviderErrorException
+     */
+    public function getInstagramPosts($page = null, $count = 10)
+    {
+        if (empty($this->instagram)) {
+            throw new \Exception('Instagram is not configured!');
+        }
+
+        $ig = $this->instagram;
+        if (!empty($page)) {
+            if (array_key_exists($page, $this->instagram)) {
+                unset($ig);
+                $ig = array();
+                $ig[$page] = $this->instagram[$page];
+            } else {
+                throw new \Exception('User is not configured under instagramm!');
+            }
+        }
+
+        $posts = [];
+        /**
+         * @var $feed InstagramFeed
+         */
+        foreach ($ig as $name => $feed) {
+            $post[$name] = $feed->getItems($count);
+        }
+
+        return $posts;
     }
 }

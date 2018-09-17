@@ -43,12 +43,10 @@ class ScriptHandler
         $citoBase = false;
         if ($fs->exists($templateDir . '/base.html.twig')) {
             $baseFile = file_get_contents($templateDir . '/base.html.twig');
-            if (strpos($baseFile, '{# cito #}')) {
-                $citoBase = true;
-            }
+            $citoBase = strpos($baseFile, '{# cito #}') ? true : false;
         }
         if (!$citoBase) {
-            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/');
+            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', null, ['override' => true]);
         }
 
         // Add public files
@@ -62,7 +60,7 @@ class ScriptHandler
             $fs->mirror(__DIR__ . '/../Resources/public/assets/sass', $publicDir . '/assets/sass');
         }
         if (!$fs->exists($publicDir . '/assets/image/layout/logo.svg')) {
-            $fs->copy(__DIR__ . '/../Resources/public/assets/layout/logo.svg', $publicDir . '/assets/layout/logo.svg');
+            $fs->copy(__DIR__ . '/../Resources/public/assets/image/layout/logo.svg', $publicDir . '/assets/image/layout/logo.svg');
         }
         $fs->mkdir($publicDir . '/assets/fonts');
     }
