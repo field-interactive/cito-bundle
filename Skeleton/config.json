@@ -1,45 +1,22 @@
 {
-  "publicPath": "./public",
-  "assetsPath": "./public/assets",
-  "bsProxy": "local.development.de",
-  "watchHtml": "./pages/*",
-
-  "fonts": {
-    "src": [
-      "./node_modules/font-awesome/fonts/*"
-    ],
-    "dest": "assets/build/fonts/"
-  },
-
-  "favicon": {
-    "src": "./public/assets/image/icon/favicon.png",
-    "dest": "./public/assets/build/img/favicon/",
-    "data": "./favicon.json",
-    "assets": "/assets/build/img/favicon/",
-    "htmlSrc": [
-      "./templates/partial/favicon.html"
-    ],
-    "htmlDest": "./templates/partial"
-  },
+  "publicPath": "/assets/build",
+  "assetsPath": "public/assets/build",
 
   "styles": {
     "frontend": {
       "src": [
-        "./node_modules/font-awesome/css/font-awesome.min.css",
         "./public/assets/sass/default.sass"
       ],
-      "dest": "assets/build/css/main.css"
+      "dest": "css/main"
     }
   },
 
   "scripts": {
     "frontend": {
       "src": [
-        "./node_modules/vanilla-lazyload/dist/lazyload.js",
-        "./node_modules/jquery/dist/jquery.min.js",
         "./public/assets/js/default.js"
       ],
-      "dest": "assets/build/js/main.js"
+      "dest": "js/main"
     }
   }
 }

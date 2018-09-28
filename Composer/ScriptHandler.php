@@ -27,7 +27,7 @@ class ScriptHandler
     /**
      * @param Event $event
      */
-    public static function updateTemplateFiles(Event $event)
+    public static function installTemplateFiles(Event $event)
     {
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];

@@ -17,6 +17,10 @@
         {
             "name": "Marc Harding",
             "email": "m.harding@field-interactive.com"
+        },
+        {
+            "name": "Dominik Deimel",
+            "email": "d.deimel@field-interactive.com"
         }
     ],
     "minimum-stability": "stable",

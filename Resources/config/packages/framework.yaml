@@ -31,4 +31,4 @@ framework:
 
     assets:
         # this manifest is applied to every asset (including packages)
-        json_manifest_path: "%kernel.project_dir%/rev-manifest.json"
+        json_manifest_path: "%kernel.project_dir%/public/assets/build/manifest.json"
