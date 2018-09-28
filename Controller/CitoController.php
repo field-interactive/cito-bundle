@@ -29,7 +29,23 @@ class CitoController extends Controller
             return $this->render($url.'/index.html.twig');
         }
 
+        $locale = $this->getParameter('locale');
+        $urlLocale = $this->urlLocale($url);
+        if ($locale && !$urlLocale) {
+            return $this->redirect($locale.'/'.$url);
+        }
+
         $errMsg = $url.' not found! Searched for '.$this->pagesPath.$url.'.html.twig and '.$this->pagesPath.$url.'/index.html.twig!';
         throw $this->createNotFoundException($errMsg);
+    }
+
+    protected function urlLocale(string $url)
+    {
+        $locale = trim(substr($url, 0, 3), '/');
+        if (strlen($locale) > 2 || strlen($locale) < 2) {
+            return false;
+        }
+
+        return $locale;
     }
 }
