@@ -37,7 +37,7 @@ class ScriptHandler
         $fs = new Filesystem();
 
         if (!$fs->exists($pagesDir . '/index.html.twig')) {
-            $fs->copy(__DIR__ . '/../Resources/pages/index.html.twig', $pagesDir . '/index.html.twig');
+            $fs->mirror(__DIR__ . '/../Resources/pages/', $pagesDir . '/');
         }
 
         $citoBase = false;
