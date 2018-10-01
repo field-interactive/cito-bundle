@@ -155,13 +155,14 @@ class ScriptHandler
     {
         $fs = new Filesystem();
 
-        $fs->copy(__DIR__ . '/../Skeleton/gulpfile.js', 'gulpfile.js', false);
+        $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', false);
+        $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', false);
         $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', false);
         $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
 
         // Additional information
         echo 'You can now do a yarn install for the javascript packages.';
-        echo 'You can use Gulp to compile sass, javascripts and more. (See gulpfile.js for more information)';
+        echo 'You can use Webpack to compile sass, javascripts and more.';
     }
 
     protected static function getOptions(Event $event)
