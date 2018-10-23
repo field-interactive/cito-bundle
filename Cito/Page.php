@@ -53,10 +53,8 @@ class Page
      */
     public function __construct(\Twig_TemplateWrapper $template, $context = [])
     {
-//        $fullPath = realpath($fullPath);
-
         $this->template = $template;
-        $this->fullPath = $template->getSourceContext()->getPath();
+        $this->fullPath = str_replace('\\', '/', $template->getSourceContext()->getPath());
         $this->path = $this->generateRelativePath($this->fullPath);
         $this->link = $this->generateSelfLink($this->fullPath);
         $this->name = $this->getTemplateName($this->fullPath);
