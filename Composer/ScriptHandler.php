@@ -153,6 +153,7 @@ class ScriptHandler
      */
     public static function installJavascriptFiles(Event $event)
     {
+        $options = static::getOptions($event);
         $publicDir = $options['symfony-public-dir'];
         $fs = new Filesystem();
 
@@ -167,7 +168,7 @@ class ScriptHandler
         }
         if (!$fs->exists($publicDir . '/../webpack.config.js')) {
             $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', false);
-        }        
+        }
 
         // Additional information
         echo 'You can now do a npm install for the javascript packages.';
