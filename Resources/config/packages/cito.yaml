@@ -1,3 +1,8 @@
 cito:
     pages: '%kernel.project_dir%/pages/'
     posts: '%kernel.project_dir%/public/posts/'
+    user_agent_enabled: false
+    default_user_agent: "new"
+    user_agent_routing:
+        new: 'ie 11, opera > 52'
+        old: 'ie < 11, opera < 52'

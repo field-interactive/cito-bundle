@@ -3,6 +3,9 @@
 parameters:
     field_cito.dir.pages: '%kernel.project_dir%/pages/'
     field_cito.dir.posts: '%kernel.project_dir%/public/posts/'
+    field_cito.routing.user_agent_enabled: false
+    field_cito.routing.default_user_agent: ""
+    field_cito.routing.user_agent_routing: []
     social_media: []
 
 services:

@@ -16,8 +16,10 @@ class Configuration implements ConfigurationInterface
             ->children()
             ->scalarNode('pages')->defaultValue('%kernel.project_dir%/pages/')->end()
             ->scalarNode('posts')->defaultValue('%kernel.project_dir%/public/posts/')->end()
-            ->end()
-        ;
+            ->booleanNode('user_agent_enabled')->defaultValue(false)->end()
+            ->scalarNode('default_user_agent')->defaultValue('')->end()
+            ->arrayNode('user_agent_routing')->scalarPrototype()->end()->end()
+            ->end();
 
         return $treeBuilder;
     }
