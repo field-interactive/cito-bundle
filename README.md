@@ -124,26 +124,17 @@ Set the class and the id of the `<body>` tag.
 
 ---
 
-## JavaScripts and Gulp
+## JavaScripts and Webpack
 ### Lazyload
 [vanilla lazyload](https://github.com/verlok/lazyload)
 
-### ServiceWorker
-We've added a google [serviceworker](https://developers.google.com/web/tools/workbox/)
-
 ### Sass compiling
-To write better and cleaner css you can use sass, which you can compile over `gulp styles`.
+To write better and cleaner css you can use sass, which you can compile over `npm build`.
 You only need the `assets/sass/default.sass` where you combine your sass files.
 
 ### Watcher
-Auto compiles sass and minifys css and js. You can start a watcher with the command `gulp watch`.
-If you want to auto refresh the browser after new compiling you can use the browser sync `gulp watch-bs`.
-
-### Favicon
-Generates favicons to display on the desktop for every common OS. To add the favicons to your page you have to
-include the `favicon.html` in the `base.html.twig`
-
-    {% include 'partial/favicon.html' %}
+Auto compiles sass and minifys css and js. You can start a watcher with the command `npm watch`.
+If you want to auto refresh the browser after new compiling you can use the browser sync `gulp serve`.
 
 ---
 

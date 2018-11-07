@@ -28,8 +28,8 @@ class CitoController extends Controller
         if ($locale && !$urlLocale) {
             // redirect to url with default locale
             return $this->redirect($locale.'/'.$url);
-        } elseif ($urlLocale) {
-            // remove locale to find page
+        } elseif ($locale && $urlLocale) {
+            // remove locale to find page if localisation is enabled
             $url = substr($url, 3);
         }
 
