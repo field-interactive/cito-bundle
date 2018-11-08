@@ -27,6 +27,14 @@ class ScriptHandler
     /**
      * @param Event $event
      */
+    public static function updateTemplateFiles(Event $event)
+    {
+        installTemplateFiles($event);
+    }
+
+    /**
+     * @param Event $event
+     */
     public static function installTemplateFiles(Event $event)
     {
         $options = static::getOptions($event);
@@ -46,7 +54,7 @@ class ScriptHandler
             $citoBase = strpos($baseFile, '{# cito #}') ? true : false;
         }
         if (!$citoBase) {
-            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', null, ['override' => true]);
+            $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', null, ['override' => false]);
         }
 
         // Add public files
