@@ -26,6 +26,16 @@ class ScriptHandler
 
     /**
      * @param Event $event
+     * 
+     * Function called from old version, will be deprecated in 1.3
+     */
+    public static function updateTemplateFiles(Event $event)
+    {
+        installTemplateFiles($event);
+    }
+
+    /**
+     * @param Event $event
      */
     public static function installTemplateFiles(Event $event)
     {
