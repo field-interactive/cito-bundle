@@ -22,6 +22,9 @@ class CitoExtension extends Extension
 
         $container->setParameter('field_cito.dir.pages', $config['pages']);
         $container->setParameter('field_cito.dir.posts', $config['posts']);
+        $container->setParameter('field_cito.routing.user_agent_enabled', $config['user_agent_enabled']);
+        $container->setParameter('field_cito.routing.default_user_agent', $config['default_user_agent']);
+        $container->setParameter('field_cito.routing.user_agent_routing', $config['user_agent_routing']);
 
         $this->addAnnotatedClassesToCompile(array(
             'FieldInteractive\\CitoBundle\\Controller\\CitoController',

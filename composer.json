@@ -36,7 +36,6 @@
         "symfony/process": "^3.0|^4.0",
         "liip/imagine-bundle": "^2.0",
         "composer/ca-bundle": "^1",
-        "nochso/html-compress-twig": "^2.0",
         "swiftmailer/swiftmailer": "^6.0",
         "rezozero/mixedfeed": "^1.2"
     },
