@@ -25,10 +25,6 @@ class ContactType extends AbstractType
                 'required' => false,
             ])
             ->add('message', TextareaType::class)
-            ->add('attachment', FileType::class, [
-                'required' => false,
-                'multiple' => true,
-            ])
             ->add('submit', SubmitType::class, ['label' => 'Send Mail'])
         ;
     }
