@@ -32,7 +32,7 @@ class CitoExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_Function('navigation', [$this, 'setNavigation'], ['is_safe' => ['html']]),
+            new \Twig_Function('navigation', [$this, 'setNavigation'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new \Twig_Function('page', [$this, 'getPage'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new \Twig_Function('pagelist', [$this, 'getPagelist'], ['needs_environment' => true]),
         ];
@@ -52,7 +52,7 @@ class CitoExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function setNavigation($path, $options = [], $uri = null)
+    public function setNavigation(\Twig_Environment $twig, $path, $options = [], $uri = null)
     {
         $path = ltrim($path, '/');
 
@@ -60,10 +60,9 @@ class CitoExtension extends \Twig_Extension
             $uri = $this->request->getPathInfo();
         }
 
-        if (is_file($this->projectDir.$path)) {
-            return Navigation::render($this->projectDir.$path, $uri, $options);
-        } elseif (is_file($this->projectDir.'templates/'.$path)) {
-            return Navigation::render($this->projectDir.'templates/'.$path, $uri, $options);
+        if (is_file($this->projectDir.'templates/'.$path) || is_file($this->projectDir.'pages/'.$path)) {
+            $navHtml = $twig->render($path);
+            return Navigation::render($navHtml, $uri, $options);
         }
 
         return '';
