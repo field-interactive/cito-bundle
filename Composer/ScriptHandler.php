@@ -175,6 +175,48 @@ class ScriptHandler
         echo 'You can use Webpack to compile sass, javascripts and more.';
     }
 
+    /**
+     * Update the Cito files without delete user changes
+     *
+     * @param Event $event
+     */
+    public static function updateCito(Event $event)
+    {
+        $options = static::getOptions($event);
+        $configDir = $options['symfony-config-dir'];
+        $templateDir = $options['symfony-template-dir'];
+        $fs = new Filesystem();
+
+        /*
+         * Update config/packages/cito.yaml
+         */
+        $yaml = Yaml::parseFile($configDir . '/packages/cito.yaml');
+        if (!array_key_exists('user_agent_enabled', $yaml['cito'])) {
+            $yaml['cito']['user_agent_enabled'] = false;
+        }
+        if (!array_key_exists('default_user_agent', $yaml['cito'])) {
+            $yaml['cito']['default_user_agent'] = 'new';
+        }
+        if (!array_key_exists('user_agent_routing', $yaml['cito'])) {
+            $yaml['cito']['user_agent_routing'] = [
+                'new' => 'ie 11, opera > 52',
+                'old' => 'ie < 11, opera < 52'
+            ];
+        }
+        if (!array_key_exists('translation_enabled', $yaml['cito'])) {
+            $yaml['cito']['translation_enabled'] = false;
+        }
+        if (!array_key_exists('translation_support', $yaml['cito'])) {
+            $yaml['cito']['translation_support'] = [
+                'de' => 'Deutsch',
+                'en' => 'Englisch'
+            ];
+        }
+
+        $fs->remove($configDir . '/packages/cito.yaml');
+        $fs->dumpFile($configDir . '/packages/cito.yaml', Yaml::dump($yaml, 99));
+    }
+
     protected static function getOptions(Event $event)
     {
         $options = array_merge(static::$options, $event->getComposer()->getPackage()->getExtra());
