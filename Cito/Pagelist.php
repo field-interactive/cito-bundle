@@ -142,7 +142,7 @@ class Pagelist
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public static function dir(\Twig_Environment $environment, $dir, $current, $sortOrder = null, $sortBy = 'link', $filter = null, $limit = null)
+    public static function dir(\Twig_Environment $environment, $dir, $current, $sortOrder = null, $sortBy = 'link', $filter = null, $limit = null, $userAgentEnabled = false)
     {
         $pagelist = [];
 
@@ -157,7 +157,7 @@ class Pagelist
                 $fullPath = $item->getPathname();
                 $relativePath = Page::generateRelativePath($fullPath);
                 $template = $environment->load($relativePath);
-                $page = new Page($template);
+                $page = new Page($template, [], $userAgentEnabled);
                 $pagelist[] = $page;
             }
         }
@@ -190,14 +190,14 @@ class Pagelist
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public static function files(\Twig_Environment $environment, $files, $current, $sortOrder = null, $sortBy = null, $filter = null)
+    public static function files(\Twig_Environment $environment, $files, $current, $sortOrder = null, $sortBy = null, $filter = null, $userAgentEnabled = false)
     {
         $pagelist = [];
         foreach ($files as $file) {
             if (!strpos($file, $current)) {
                 $relativePath = Page::generateRelativePath($file);
                 $template = $environment->load($relativePath);
-                $page = new Page($template);
+                $page = new Page($template, [], $userAgentEnabled);
                 $pagelist[] = $page;
             }
         }

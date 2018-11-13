@@ -19,12 +19,15 @@ class CitoExtension extends \Twig_Extension
 
     private $translationEnabled;
 
-    public function __construct(RequestStack $request, string $projectDir, array $supportedLanguages, bool $translationEnabled)
+    private $userAgentEnabled;
+
+    public function __construct(RequestStack $request, string $projectDir, array $supportedLanguages, bool $translationEnabled, bool $userAgentEnabled)
     {
         $this->request = $request->getCurrentRequest();
         $this->projectDir = $projectDir;
         $this->supportedLanguages = $supportedLanguages;
         $this->translationEnabled = $translationEnabled;
+        $this->userAgentEnabled = $userAgentEnabled;
     }
 
     /**
@@ -80,12 +83,8 @@ class CitoExtension extends \Twig_Extension
             $uri = $this->request->getPathInfo();
         }
 
-        if (is_file($this->projectDir.'templates/'.$path) || is_file($this->projectDir.'pages/'.$path)) {
-            $navHtml = $twig->render($path);
-            return Navigation::render($navHtml, $uri, $options);
-        }
-
-        return '';
+        $navHtml = $twig->render($path);
+        return Navigation::render($navHtml, $uri, $options);
     }
 
     /**
@@ -105,7 +104,7 @@ class CitoExtension extends \Twig_Extension
 
         $path = Page::generateRelativePath($path);
         $template = $twig->load($path);
-        $page = new Page($template, $context);
+        $page = new Page($template, $context, $this->userAgentEnabled);
 
         return $page;
     }
@@ -137,7 +136,7 @@ class CitoExtension extends \Twig_Extension
         $current = $this->getCurrentPage();
 
         if (isset($options['dir'])) {
-            return Pagelist::dir($twig, $this->projectDir.'pages/'.$options['dir'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $options['limit']);
+            return Pagelist::dir($twig, $this->projectDir.'pages/'.$options['dir'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $options['limit'], $this->userAgentEnabled);
         }
 
         if (isset($options['files'])) {
@@ -147,10 +146,10 @@ class CitoExtension extends \Twig_Extension
                 }
             }
 
-            return Pagelist::files($twig, $options['files'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy']);
+            return Pagelist::files($twig, $options['files'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $this->userAgentEnabled);
         }
 
-        return new ArrayIterator([]);
+        throw new MissingOptionsException('The option "dir" for directories or "fiels" for exact fiels is missing.');
     }
 
     /**

@@ -52,6 +52,7 @@ services:
             $projectDir: '%kernel.project_dir%/'
             $supportedLanguages: "%field_cito.translation.translation_support%"
             $translationEnabled: "%field_cito.translation.translation_enabled%"
+            $userAgentEnabled: "%field_cito.routing.user_agent_enabled%"
         tags:
             - { name: twig.extension }
 

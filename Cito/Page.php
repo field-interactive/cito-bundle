@@ -51,12 +51,12 @@ class Page
      * @param $fullPath
      * @param array $context
      */
-    public function __construct(\Twig_TemplateWrapper $template, $context = [])
+    public function __construct(\Twig_TemplateWrapper $template, $context = [], $userAgentEnabled = false)
     {
         $this->template = $template;
         $this->fullPath = str_replace('\\', '/', $template->getSourceContext()->getPath());
         $this->path = $this->generateRelativePath($this->fullPath);
-        $this->link = $this->generateSelfLink($this->fullPath);
+        $this->link = $this->generateSelfLink($this->fullPath, $userAgentEnabled);
         $this->name = $this->getTemplateName($this->fullPath);
 
         $this->context = $context;
@@ -112,10 +112,13 @@ class Page
      *
      * @return string
      */
-    public static function generateSelfLink($path)
+    public static function generateSelfLink($path, $userAgentEnabled)
     {
         if ($start = strpos($path, '/pages/')) {
             $path = substr($path, $start + 7);
+            if ($userAgentEnabled && (substr( $path, 0, 3 ) === "new" || substr( $path, 0, 3 ) === "old")) {
+                $path = substr($path, 4);
+            }
         } elseif ($start = strpos($path, '/templates/')) {
             $path = substr($path, $start + 11);
         }
