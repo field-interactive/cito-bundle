@@ -6,6 +6,8 @@ parameters:
     field_cito.routing.user_agent_enabled: false
     field_cito.routing.default_user_agent: ""
     field_cito.routing.user_agent_routing: []
+    field_cito.translation.translation_enabled: false
+    field_cito.translation.translation_support: []
     social_media: []
 
 services:
@@ -48,6 +50,8 @@ services:
         arguments:
             $request: '@request_stack'
             $projectDir: '%kernel.project_dir%/'
+            $supportedLanguages: "%field_cito.translation.translation_support%"
+            $translationEnabled: "%field_cito.translation.translation_enabled%"
         tags:
             - { name: twig.extension }
 

@@ -6,3 +6,7 @@ cito:
     user_agent_routing:
         new: 'ie 11, opera > 52'
         old: 'ie < 11, opera < 52'
+    translation_enabled: false
+    translation_support:
+        de: 'Deutsch'
+        en: 'English'

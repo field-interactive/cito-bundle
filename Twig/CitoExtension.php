@@ -15,10 +15,16 @@ class CitoExtension extends \Twig_Extension
 
     private $projectDir;
 
-    public function __construct(RequestStack $request, $projectDir)
+    private $supportedLanguages;
+
+    private $translationEnabled;
+
+    public function __construct(RequestStack $request, string $projectDir, array $supportedLanguages, bool $translationEnabled)
     {
         $this->request = $request->getCurrentRequest();
         $this->projectDir = $projectDir;
+        $this->supportedLanguages = $supportedLanguages;
+        $this->translationEnabled = $translationEnabled;
     }
 
     /**
@@ -35,6 +41,7 @@ class CitoExtension extends \Twig_Extension
             new \Twig_Function('navigation', [$this, 'setNavigation'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new \Twig_Function('page', [$this, 'getPage'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new \Twig_Function('pagelist', [$this, 'getPagelist'], ['needs_environment' => true]),
+            new \Twig_Function('language_switch', [$this, 'getLanguageSwitch'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -43,6 +50,19 @@ class CitoExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFilter('ratio', [$this, 'imageRatioAspectFilter']),
         );
+    }
+
+    public function getLanguageSwitch(\Twig_Environment $twig, $template)
+    {
+        $template = ltrim($template, '/');
+        $uri = $this->request->getPathInfo();
+        $uri = ltrim(substr($uri, 3), '/');
+
+        return $twig->render($template, [
+            'locale' => $this->request->getLocale(),
+            'languages' => $this->supportedLanguages,
+            'link' => $uri
+        ]);
     }
 
     /**
@@ -140,6 +160,11 @@ class CitoExtension extends \Twig_Extension
     {
         $uri = $this->request->getRequestUri();
         $uri = rtrim($uri, '/');
+
+        if ($this->translationEnabled) {
+            $uri = substr($uri, 3);
+        }
+        
         if (is_file($this->projectDir.'pages/'.$uri.'.html.twig')) {
             return $uri.'.html.twig';
         } else {

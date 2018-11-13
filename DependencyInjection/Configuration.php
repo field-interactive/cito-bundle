@@ -19,6 +19,8 @@ class Configuration implements ConfigurationInterface
             ->booleanNode('user_agent_enabled')->defaultValue(false)->end()
             ->scalarNode('default_user_agent')->defaultValue('')->end()
             ->arrayNode('user_agent_routing')->scalarPrototype()->end()->end()
+            ->booleanNode('translation_enabled')->defaultValue(false)->end()
+            ->arrayNode('translation_support')->scalarPrototype()->end()->end()
             ->end();
 
         return $treeBuilder;

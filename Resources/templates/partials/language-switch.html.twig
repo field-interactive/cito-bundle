@@ -1,0 +1,7 @@
+<ul>
+    {% for loc, language  in languages %}
+        <li>
+            <a href="/{{ loc }}/{{ link }}" class="{{ (loc == locale) ? 'active' : '' }}">{{ language }}</a>
+        </li>
+    {% endfor %}
+</ul>

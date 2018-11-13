@@ -23,6 +23,11 @@ class CitoController extends Controller
     {
         $url = rtrim($url, '/');
 
+        $translation = $this->getParameter('field_cito.translation.translation_enabled');
+        if ($translation) {
+            $url = substr($url, 3);
+        }
+
         if ($this->getParameter('field_cito.routing.user_agent_enabled') === true && !$this->isUARouted($url)) {
             $browserData = $this->getBrowserData($_SERVER['HTTP_USER_AGENT']);
 
@@ -76,16 +81,6 @@ class CitoController extends Controller
             return $this->render($url.'.html.twig');
         } elseif (is_file($this->pagesPath.$url.'/index.html.twig')) {
             return $this->render($url.'/index.html.twig');
-        }
-
-        $locale = $this->getParameter('locale');
-        $urlLocale = $this->urlLocale($url);
-        if ($locale && !$urlLocale) {
-            // redirect to url with default locale
-            return $this->redirect($locale.'/'.$url);
-        } elseif ($locale && $urlLocale) {
-            // remove locale to find page if localisation is enabled
-            $url = substr($url, 3);
         }
 
         if (is_file($this->pagesPath.$url.'.html.twig')) {
