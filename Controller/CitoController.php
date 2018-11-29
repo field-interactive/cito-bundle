@@ -25,7 +25,11 @@ class CitoController extends Controller
 
         $translation = $this->getParameter('field_cito.translation.translation_enabled');
         if ($translation) {
-            $url = substr($url, 3);
+            if ($this->getLocaleFromUrl($url)) {
+                $url = substr($url, 3);
+            } else {
+                return $this->redirect('/' .  $this->getParameter('locale'));
+            }            
         }
 
         if ($this->getParameter('field_cito.routing.user_agent_enabled') === true && !$this->isUARouted($url)) {
@@ -75,12 +79,6 @@ class CitoController extends Controller
                 $errMsg = $selectedRoute . "/" . $url.' not found! Searched for '.$this->pagesPath.$selectedRoute . "/" . $url.'.html.twig and '.$this->pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig!';
                 throw $this->createNotFoundException($errMsg);
             }
-        }
-
-        if (is_file($this->pagesPath.$url.'.html.twig')) {
-            return $this->render($url.'.html.twig');
-        } elseif (is_file($this->pagesPath.$url.'/index.html.twig')) {
-            return $this->render($url.'/index.html.twig');
         }
 
         if (is_file($this->pagesPath.$url.'.html.twig')) {
