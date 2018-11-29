@@ -65,8 +65,9 @@ class SocialMedia
         if (!empty($page)) {
             if (array_key_exists($page, $this->facebook)) {
                 unset($fb);
-                $fb = array();
-                $fb[$page] = $this->facebook[$page];
+                $fb = [
+                    $page => $this->facebook[$page]
+                    ];
             } else {
                 throw new \Exception('User is not configured under facebook!');
             }
@@ -77,7 +78,7 @@ class SocialMedia
          * @var $feed FacebookPageFeed
          */
         foreach ($fb as $name => $feed) {
-            $post[$name] = $feed->getItems($count);
+            $posts[$name] = $feed->getItems($count);
         }
 
         return $posts;
@@ -99,8 +100,9 @@ class SocialMedia
         if (!empty($page)) {
             if (array_key_exists($page, $this->twitter)) {
                 unset($fb);
-                $tw = array();
-                $tw[$page] = $this->twitter[$page];
+                $tw = [
+                    $page => $this->twitter[$page]
+                    ];
             } else {
                 throw new \Exception('User is not configured under twitter!');
             }
@@ -111,7 +113,7 @@ class SocialMedia
          * @var $feed TwitterFeed
          */
         foreach ($tw as $name => $feed) {
-            $post[$name] = $feed->getItems($count);
+            $posts[$name] = $feed->getItems($count);
         }
 
         return $posts;
@@ -133,8 +135,9 @@ class SocialMedia
         if (!empty($page)) {
             if (array_key_exists($page, $this->instagram)) {
                 unset($ig);
-                $ig = array();
-                $ig[$page] = $this->instagram[$page];
+                $ig = [
+                    $page => $this->instagram[$page]
+                    ];
             } else {
                 throw new \Exception('User is not configured under instagramm!');
             }
@@ -145,9 +148,19 @@ class SocialMedia
          * @var $feed InstagramFeed
          */
         foreach ($ig as $name => $feed) {
-            $post[$name] = $feed->getItems($count);
+            $posts[$name] = $feed->getItems($count);
         }
 
         return $posts;
+    }
+
+    public function getPostsPath()
+    {
+        return $this->postsPath;
+    }
+
+    public function setPostsPath($postsPath)
+    {
+        $this->postsPath = $postsPath;
     }
 }

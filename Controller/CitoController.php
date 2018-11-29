@@ -25,7 +25,11 @@ class CitoController extends Controller
 
         $translation = $this->getParameter('field_cito.translation.translation_enabled');
         if ($translation) {
-            $url = substr($url, 3);
+            if ($this->getLocaleFromUrl($url)) {
+                $url = substr($url, 3);
+            } else {
+                return $this->redirect('/' .  $this->getParameter('locale'));
+            }            
         }
 
         if ($this->getParameter('field_cito.routing.user_agent_enabled') === true && !$this->isUARouted($url)) {
