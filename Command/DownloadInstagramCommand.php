@@ -23,7 +23,7 @@ class DownloadInstagramCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('app:social:instagram:download')
+            ->setName('cito:social:instagram:download')
             ->setDescription('Downloads latest Instagram posts')
             ->setHelp('This command allows you to download the latest Instagram posts')
             ->addOption('user', 'u', InputArgument::OPTIONAL, 'The user which posts you want', null)

@@ -9,7 +9,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 
-class DownloadFacebookCommand extends Command
+class DownloadTwitterCommand extends Command
 {
     private $socialMediaService;
 
@@ -23,21 +23,21 @@ class DownloadFacebookCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('cito:social:facebook:download')
-            ->setDescription('Loads latest Facebook posts')
-            ->setHelp('This command allows you to load the latest Facebook posts')
+            ->setName('cito:social:twitter:download')
+            ->setDescription('Downloads latest Twitter posts')
+            ->setHelp('This command allows you to download the latest Twitter posts')
             ->addOption('user', 'u', InputArgument::OPTIONAL, 'The user which posts you want', null)
             ->addOption('count', 'c', InputArgument::OPTIONAL, 'The amount of posts you want', 10);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $user = $input->getOption('user');
+        $user = $input->getOption('user');        
         $count = $input->getOption('count');
 
         try {
-            $this->socialMediaService->downloadFacebookFeed($user, $count);
-            $output->writeln("Facebook posts loadet");
+            $this->socialMediaService->downloadTwitterFeed($user, $count);
+            $output->writeln("Twitter posts loadet");
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }
