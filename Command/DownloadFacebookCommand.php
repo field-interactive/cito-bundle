@@ -2,18 +2,18 @@
 
 namespace FieldInteractive\CitoBundle\Command;
 
-use FieldInteractive\CitoBundle\Service\SocialMedia;
+use FieldInteractive\CitoBundle\Service\SocialMediaService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
 
-class GetFacebookPosts extends Command
+class DownloadFacebookCommand extends Command
 {
     private $socialMediaService;
 
-    public function __construct(SocialMedia $service)
+    public function __construct(SocialMediaService $service)
     {
         $this->socialMediaService = $service;
 
@@ -23,22 +23,23 @@ class GetFacebookPosts extends Command
     protected function configure()
     {
         $this
-            ->setName('cito:social-media:facebook-posts')
+            ->setName('app:social:facebook:download')
             ->setDescription('Loads latest Facebook posts')
             ->setHelp('This command allows you to load the latest Facebook posts')
-            ->addArgument('user', InputArgument::OPTIONAL, 'The user which posts you want');
+            ->addOption('user', 'u', InputArgument::OPTIONAL, 'The user which posts you want', null)
+            ->addOption('count', 'c', InputArgument::OPTIONAL, 'The amount of posts you want', 10);
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $user = $input->getArgument('user');
+        $user = $input->getOption('user');        
+        $count = $input->getOption('count');
 
         try {
-            $this->socialMediaService->getFacebookPosts($user);
+            $this->socialMediaService->downloadFacebookFeed($user, $count);
             $output->writeln("Facebook posts loadet");
         } catch (\Exception $e) {
             $output->writeln($e->getMessage());
         }
-
     }
 }
