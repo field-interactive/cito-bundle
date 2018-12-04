@@ -16,6 +16,8 @@ class SocialMediaService
 {
     private $postsPath;
 
+    private $projectPath;
+
     private $instagram;
 
     private $twitter;
@@ -28,9 +30,10 @@ class SocialMediaService
      * @param $postsPath
      * @throws CredentialsException
      */
-    public function __construct($socialMedia, $postsPath)
+    public function __construct($socialMedia, $postsPath, $projectDir)
     {
         $this->postsPath = rtrim($postsPath, '/');
+        $this->projectPath = rtrim($projectDir, '/');
 
         if (array_key_exists('facebook', $socialMedia)) {
             foreach ($socialMedia['facebook'] as $user => $options) {
@@ -134,6 +137,7 @@ class SocialMediaService
     public function loadFacebookFeed(string $user, int $count = 10, int $offset = 0)
     {
         $path = $this->getPostsPath().'/facebook/'.$user.'/';
+        $relPath = str_replace($this->projectPath.'/', '', $path);
         if (!is_dir($path)) {
             throw new FeedNotFoundExceptions("Feed for user $user not found. Looked into $path. Maybe you forget to download the feed.");
         }
@@ -142,8 +146,8 @@ class SocialMediaService
         $posts = [];
         for($i = $offset; $i < ($count + $offset); $i++) {
             $json = json_decode(file_get_contents($path.$dir[$i].'/item.json'), true);
-            $json['picture'] = $path.$dir[$i].'/picture.jpg';
-            $json['full_picture'] = $path.$dir[$i].'/picture_full.jpg';
+            $json['picture'] = $relPath.$dir[$i].'/picture.jpg';
+            $json['full_picture'] = $relPath.$dir[$i].'/picture_full.jpg';
             $posts[$dir[$i]] =  $json;
         }
 

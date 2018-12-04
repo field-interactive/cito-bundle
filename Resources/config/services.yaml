@@ -42,6 +42,7 @@ services:
             arguments:
                 $socialMedia: "%social_media%"
                 $postsPath: "%field_cito.dir.posts%"
+                $projectDir: "%kernel.project_dir%"
             tags:
                 - { name: "SocialMediaService" }
 
