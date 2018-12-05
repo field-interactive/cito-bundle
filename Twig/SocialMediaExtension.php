@@ -30,7 +30,7 @@ class SocialMediaExtension extends AbstractExtension
     {
         return array(
             new Twig_SimpleFunction('FacebookPosts', array($this, 'getFacebookPosts')),
-            new Twig_SimpleFunction('InstagrammPosts', array($this, 'getInstagrmPosts')),
+            new Twig_SimpleFunction('InstagramPosts', array($this, 'getInstagramPosts')),
             new Twig_SimpleFunction('TwitterPosts', array($this, 'getTwitterPosts')),
         );
     }
