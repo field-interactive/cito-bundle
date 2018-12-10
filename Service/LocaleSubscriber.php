@@ -2,12 +2,20 @@
 
 namespace FieldInteractive\CitoBundle\Service;
 
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class LocaleSubscriber implements EventSubscriberInterface
 {
+    private $params;
+
+    public function __construct(ParameterBagInterface $params)
+    {
+        $this->params = $params;
+    }
+
     /**
      * @inheritdoc
      */
@@ -23,7 +31,7 @@ class LocaleSubscriber implements EventSubscriberInterface
         $request = $event->getRequest();
         $locale = $this->getLocale($request->getPathInfo());
         if (!$locale) {
-            $locale = 'en'; // to prevent "Circular reference detected" error
+            $locale = $this->params->get('locale');
         }
         $request->setLocale($locale);
     }
@@ -35,6 +43,7 @@ class LocaleSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        return $locale;
+        $supported = $this->params->get('field_cito.translation.translation_support');
+        return array_key_exists($locale, $supported) ? $locale : false;
     }
 }
