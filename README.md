@@ -121,6 +121,23 @@ Set the class and the id of the `<body>` tag.
 
     {% set body_class = 'your-class' %}
     {% set body_id = 'your-id' %}
+    
+    
+### IncludeUserAgent
+Includes a template with user agent checks
+
+There are two usages:
+
+Replace 'template file' with the file you want to include.
+The file will be searched for in the pages directory set in cito.yml.
+Setting no folder will automatically choose it based on the User Agent.
+If the folder is set, it will take the include the file from there.
+
+    {{ include_ua('template file') }}
+    or
+    {{ include_ua('template file', 'folder') }}
+
+
 
 ---
 
