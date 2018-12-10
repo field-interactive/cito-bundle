@@ -39,7 +39,7 @@ class UserAgentExtension extends \Twig_Extension
         if (is_file(CitoController::$pagesPath.$selectedRoute . "/" . $template.'.html.twig')) {
             return $this->env->render($selectedRoute . "/" . $template.'.html.twig');
         } else {
-            return CitoController::$pagesPath.$selectedRoute . "/" . $template.'.html.twig';
+            return "Could not include file: " . CitoController::$pagesPath.$selectedRoute . "/" . $template.'.html.twig';
         }
     }
 }
