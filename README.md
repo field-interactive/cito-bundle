@@ -99,7 +99,7 @@ Creates an html picture tag for an image with a set of given sizes.
 You can set up to 6 sizes.
 
 ### SocialMedia
-Loads new posts from a SocialMedia-Platform (like Facebook, Twitter or Instagramm)
+Loads new posts from a SocialMedia-Platform (like Facebook, Twitter or Instagram)
 
     YAML:
     social_media:
