@@ -9,11 +9,11 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CitoController extends Controller
 {
-    private $pagesPath;
+    public static $pagesPath;
 
     public function __construct($pagesPath)
     {
-        $this->pagesPath = $pagesPath;
+        self::$pagesPath = $pagesPath;
     }
 
     /**
@@ -33,62 +33,70 @@ class CitoController extends Controller
         }
 
         if ($this->getParameter('field_cito.routing.user_agent_enabled') === true && !$this->isUARouted($url)) {
-            $browserData = $this->getBrowserData($_SERVER['HTTP_USER_AGENT']);
-
             $routingData = $this->getParameter('field_cito.routing.user_agent_routing');
+            $defaultRoute = $this->getParameter('field_cito.routing.default_user_agent');
 
-            $selectedRoute = $this->getParameter('field_cito.routing.default_user_agent');
-            foreach ($routingData as $route => $browsers) {
-                if (strpos($browsers, strtolower($browserData['name'])) !== false) {
-                    $exploded = explode(',', $browsers);
+            $selectedRoute = self::getSelectedRoute($routingData, $defaultRoute);
 
-                    foreach ($exploded as $browser) {
-                        preg_match('/([\d]+)/', $browser, $matches);
-                        $ver = isset($matches[0]) ? $matches[0] : "?";
-
-                        if($ver !== "?") {
-                            if (strpos($browser, '>') !== false) {
-                                if ($browserData['version'] > $ver) {
-                                    $selectedRoute = $route;
-                                    break;
-                                }
-                            } elseif (strpos($browser, '<') !== false) {
-                                if ($browserData['version'] < $ver) {
-                                    $selectedRoute = $route;
-                                    break;
-                                }
-                            } else {
-                                if ($browserData['version'] === $ver) {
-                                    $selectedRoute = $route;
-                                    break;
-                                }
-                            }
-                        } else {
-                            $selectedRoute = $route;
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (is_file($this->pagesPath.$selectedRoute . "/" . $url.'.html.twig')) {
+            if (is_file(self::$pagesPath.$selectedRoute . "/" . $url.'.html.twig')) {
                 return $this->render($selectedRoute . "/" . $url.'.html.twig');
-            } elseif (is_file($this->pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig')) {
+            } elseif (is_file(self::$pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig')) {
                 return $this->render($selectedRoute . "/" . $url.'/index.html.twig');
             } else {
-                $errMsg = $selectedRoute . "/" . $url.' not found! Searched for '.$this->pagesPath.$selectedRoute . "/" . $url.'.html.twig and '.$this->pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig!';
+                $errMsg = $selectedRoute . "/" . $url.' not found! Searched for '.self::$pagesPath.$selectedRoute . "/" . $url.'.html.twig and '.self::$pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig!';
                 throw $this->createNotFoundException($errMsg);
             }
         }
 
-        if (is_file($this->pagesPath.$url.'.html.twig')) {
+        if (is_file(self::$pagesPath.$url.'.html.twig')) {
             return $this->render($url.'.html.twig');
-        } elseif (is_file($this->pagesPath.$url.'/index.html.twig')) {
+        } elseif (is_file(self::$pagesPath.$url.'/index.html.twig')) {
             return $this->render($url.'/index.html.twig');
         }
 
-        $errMsg = $url.' not found! Searched for '.$this->pagesPath.$url.'.html.twig and '.$this->pagesPath.$url.'/index.html.twig!';
+        $errMsg = $url.' not found! Searched for '.self::$pagesPath.$url.'.html.twig and '.self::$pagesPath.$url.'/index.html.twig!';
         throw $this->createNotFoundException($errMsg);
+    }
+
+    public static function getSelectedRoute($routingData, $defaultRoute) {
+        $browserData = self::getBrowserData($_SERVER['HTTP_USER_AGENT']);
+
+        $selectedRoute = $defaultRoute;
+
+        foreach ($routingData as $route => $browsers) {
+            if (strpos($browsers, strtolower($browserData['name'])) !== false) {
+                $exploded = explode(',', $browsers);
+
+                foreach ($exploded as $browser) {
+                    preg_match('/([\d]+)/', $browser, $matches);
+                    $ver = isset($matches[0]) ? $matches[0] : "?";
+
+                    if($ver !== "?") {
+                        if (strpos($browser, '>') !== false) {
+                            if ($browserData['version'] > $ver) {
+                                $selectedRoute = $route;
+                                break;
+                            }
+                        } elseif (strpos($browser, '<') !== false) {
+                            if ($browserData['version'] < $ver) {
+                                $selectedRoute = $route;
+                                break;
+                            }
+                        } else {
+                            if ($browserData['version'] === $ver) {
+                                $selectedRoute = $route;
+                                break;
+                            }
+                        }
+                    } else {
+                        $selectedRoute = $route;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return $selectedRoute;
     }
 
     /**
@@ -126,7 +134,7 @@ class CitoController extends Controller
     /**
      * Gets the browser data
      */
-    protected function getBrowserData($userAgent)
+    protected static function getBrowserData($userAgent)
     {
         $matches = [];
 
