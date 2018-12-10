@@ -21,6 +21,10 @@
         {
             "name": "Dominik Deimel",
             "email": "d.deimel@field-interactive.com"
+        },
+        {
+            "name": "Luca Kermas",
+            "email": "l.kermas@field-interactive.com"
         }
     ],
     "minimum-stability": "stable",
