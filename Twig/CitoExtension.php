@@ -21,13 +21,16 @@ class CitoExtension extends \Twig_Extension
 
     private $userAgentEnabled;
 
-    public function __construct(RequestStack $request, string $projectDir, array $supportedLanguages, bool $translationEnabled, bool $userAgentEnabled)
+    private $routeResolver;
+
+    public function __construct(RequestStack $request, RouteResolverService $routeResolver, string $projectDir, array $supportedLanguages, bool $translationEnabled, bool $userAgentEnabled)
     {
         $this->request = $request->getCurrentRequest();
         $this->projectDir = $projectDir;
         $this->supportedLanguages = $supportedLanguages;
         $this->translationEnabled = $translationEnabled;
         $this->userAgentEnabled = $userAgentEnabled;
+        $this->routeResolver = $routeResolver;
     }
 
     /**
@@ -60,11 +63,19 @@ class CitoExtension extends \Twig_Extension
         $template = ltrim($template, '/');
         $uri = $this->request->getPathInfo();
         $uri = ltrim(substr($uri, 3), '/');
+        $route = $this->routeResolver->resolveRealRoute($uri, $this->request->getLocale(), false);
+
+        $languages = [];
+        foreach ($this->supportedLanguages as $locale => $language) {
+            $languages[$locale]['locale'] = $locale;
+            $languages[$locale]['language'] = $language;
+            $languages[$locale]['link'] = $this->routeResolver->resolveRouteByFile($route, $locale);
+        }
 
         return $twig->render($template, [
             'locale' => $this->request->getLocale(),
-            'languages' => $this->supportedLanguages,
-            'link' => $uri
+            'languages' => $languages,
+            'route' => $route
         ]);
     }
 
@@ -106,6 +117,10 @@ class CitoExtension extends \Twig_Extension
         $template = $twig->load($path);
         $page = new Page($template, $context, $this->userAgentEnabled);
 
+        if ($this->translationEnabled) {
+            $page->link = $this->routeResolver->resolveRouteByFile($page->path, $this->request->getLocale());
+        }
+
         return $page;
     }
 
@@ -136,7 +151,12 @@ class CitoExtension extends \Twig_Extension
         $current = $this->getCurrentPage();
 
         if (isset($options['dir'])) {
-            return Pagelist::dir($twig, $this->projectDir.'pages/'.$options['dir'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $options['limit'], $this->userAgentEnabled);
+            $pagelist = Pagelist::dir($twig, $this->projectDir.'pages/'.$options['dir'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $options['limit'], $this->userAgentEnabled);
+            foreach ($pagelist as &$page)
+            if ($this->translationEnabled) {
+                $page->link = '/'.$this->routeResolver->resolveRouteByFile($page->path, $this->request->getLocale());
+            }
+            return $pagelist;
         }
 
         if (isset($options['files'])) {
@@ -146,10 +166,15 @@ class CitoExtension extends \Twig_Extension
                 }
             }
 
-            return Pagelist::files($twig, $options['files'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $this->userAgentEnabled);
+            $pagelist = Pagelist::files($twig, $options['files'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $this->userAgentEnabled);
+            foreach ($pagelist as &$page)
+                if ($this->translationEnabled) {
+                    $page->link = '/'.$this->routeResolver->resolveRouteByFile($page->path, $this->request->getLocale());
+                }
+            return $pagelist;
         }
 
-        throw new MissingOptionsException('The option "dir" for directories or "fiels" for exact fiels is missing.');
+        throw new MissingOptionsException('The option "dir" for directories or "files" for exact files is missing.');
     }
 
     /**

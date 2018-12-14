@@ -19,9 +19,12 @@ class CitoController extends Controller
     /**
      * @Route("/{url}", name="field_cito_z", requirements={"url": "((?!_wdt|_profiler|_error).+)?"})
      */
-    public function zAction(Request $request, $url)
+    public function zAction(Request $request, RouteResolverService $routeResolver, $url)
     {
+        $url = $routeResolver->resolveRealRoute($url, $request->getLocale());
+
         $url = rtrim($url, '/');
+        var_dump($url);
 
         $translation = $this->getParameter('field_cito.translation.translation_enabled');
         if ($translation) {
@@ -29,7 +32,7 @@ class CitoController extends Controller
                 $url = substr($url, 3);
             } else {
                 return $this->redirect('/' .  $this->getParameter('locale'));
-            }            
+            }
         }
 
         if ($this->getParameter('field_cito.routing.user_agent_enabled') === true && !$this->isUARouted($url)) {

@@ -46,10 +46,19 @@ services:
             tags:
                 - { name: "SocialMediaService" }
 
+    FieldInteractive\CitoBundle\Service\RouteResolverService:
+        public: true
+        arguments:
+            $translationPath: "%kernel.project_dir%/translations"
+            $translationEnabled: "%field_cito.translation.translation_enabled%"
+        tags:
+            - { name: "RouteResolverService" }
+
     FieldInteractive\CitoBundle\Twig\CitoExtension:
         public: true
         arguments:
             $request: '@request_stack'
+            $routeResolver: "@FieldInteractive\\CitoBundle\\Service\\RouteResolverService"
             $projectDir: '%kernel.project_dir%/'
             $supportedLanguages: "%field_cito.translation.translation_support%"
             $translationEnabled: "%field_cito.translation.translation_enabled%"
