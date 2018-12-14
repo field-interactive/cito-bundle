@@ -5,6 +5,7 @@ namespace FieldInteractive\CitoBundle\Twig;
 use FieldInteractive\CitoBundle\Cito\Navigation;
 use FieldInteractive\CitoBundle\Cito\Page;
 use FieldInteractive\CitoBundle\Cito\Pagelist;
+use FieldInteractive\CitoBundle\Service\RouteResolverService;
 use ArrayIterator;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Twig_Error_Syntax;
