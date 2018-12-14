@@ -3,7 +3,7 @@
 namespace FieldInteractive\CitoBundle\Exception;
 
 
-class FileNotFoundExceptions extends \Exception
+class FileNotFoundException extends \Exception
 {
 
 }
