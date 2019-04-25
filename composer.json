@@ -29,15 +29,15 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.0",
+        "php": "^7.2",
         "sensio/framework-extra-bundle": "^5.0",
-        "symfony/asset": "^4.0",
-        "symfony/console": "^4.0",
-        "symfony/twig-bundle": "^4.0",
-        "symfony/form": "^4.0",
-        "symfony/yaml": "^4.0",
-        "symfony/filesystem": "^3.0|^4.0",
-        "symfony/process": "^3.0|^4.0",
+        "symfony/asset": "^4.2",
+        "symfony/console": "^4.2",
+        "symfony/twig-bundle": "^4.2",
+        "symfony/form": "^4.2",
+        "symfony/yaml": "^4.2",
+        "symfony/filesystem": "^3.0|^4.2",
+        "symfony/process": "^3.0|^4.2",
         "liip/imagine-bundle": "^2.0",
         "composer/ca-bundle": "^1",
         "nochso/html-compress-twig": "^2.0",
@@ -45,7 +45,7 @@
         "rezozero/mixedfeed": "^1.2"
     },
     "require-dev": {
-        "symfony/dotenv": "^4.0"
+        "symfony/dotenv": "^4.2"
     },
     "config": {
         "preferred-install": {
