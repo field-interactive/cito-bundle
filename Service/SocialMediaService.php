@@ -137,7 +137,7 @@ class SocialMediaService
     public function loadFacebookFeed(string $user, int $count = 10, int $offset = 0)
     {
         $path = $this->getPostsPath().'/facebook/'.$user.'/';
-        $relPath = str_replace($this->projectPath.'/', '', $path);
+        $relPath = str_replace($this->projectPath.'/public/', '', $path);
         if (!is_dir($path)) {
             throw new FeedNotFoundExceptions("Feed for user $user not found. Looked into $path. Maybe you forget to download the feed.");
         }

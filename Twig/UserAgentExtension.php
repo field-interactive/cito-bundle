@@ -3,19 +3,21 @@
 namespace FieldInteractive\CitoBundle\Twig;
 
 use FieldInteractive\CitoBundle\Controller\CitoController;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 use Twig_SimpleFunction;
 
 
-class UserAgentExtension extends \Twig_Extension
+class UserAgentExtension extends AbstractExtension
 {
     private $env;
     private $enabled;
     private $routingData;
     private $defaultRoute;
 
-    public function __construct(\Twig_Environment $env, $enabled, $routingData, $defaultRoute)
+    public function __construct(Environment $env, $enabled, $routingData, $defaultRoute)
     {
         $this->env = $env;
         $this->enabled = $enabled;
@@ -26,7 +28,7 @@ class UserAgentExtension extends \Twig_Extension
     public function getFunctions()
     {
         return array(
-            new Twig_SimpleFunction('include_ua', array($this, 'includeUserAgent')),
+            new TwigFunction('include_ua', array($this, 'includeUserAgent')),
         );
     }
 

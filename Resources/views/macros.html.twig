@@ -1,4 +1,4 @@
-{% macro picture(path, sizes) %}
+{% macro picture(path, sizes, attr) %}
 <picture>
     {% set default = 600 %}
     {% if sizes is iterable %}
@@ -14,6 +14,10 @@
                 data-srcset="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }} 1x,
                 {{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  (default * 2)}}) }} 2x">
     {% endif %}
-    <img data-ratio="{{ path|ratio }}" data-src="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }}" alt="">
+    <img data-ratio="{{ path|ratio }}" data-src="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }}"
+        {% for k, a in attr %}
+            {{- k -}}="{{- a -}}"
+        {% endfor %}
+    />
 </picture>
 {% endmacro %}
