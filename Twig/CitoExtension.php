@@ -5,11 +5,17 @@ namespace FieldInteractive\CitoBundle\Twig;
 use FieldInteractive\CitoBundle\Cito\Navigation;
 use FieldInteractive\CitoBundle\Cito\Page;
 use FieldInteractive\CitoBundle\Cito\Pagelist;
+use FieldInteractive\CitoBundle\Service\RouteResolverService;
 use ArrayIterator;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Twig_Error_Syntax;
+use Symfony\Component\OptionsResolver\Exception\MissingOptionsException;
+use Twig\Environment;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
 
-class CitoExtension extends \Twig_Extension
+class CitoExtension extends AbstractExtension
 {
     private $request;
 
@@ -21,13 +27,19 @@ class CitoExtension extends \Twig_Extension
 
     private $userAgentEnabled;
 
-    public function __construct(RequestStack $request, string $projectDir, array $supportedLanguages, bool $translationEnabled, bool $userAgentEnabled)
+    private $routeResolver;
+
+    private $container;
+
+    public function __construct(RequestStack $request, RouteResolverService $routeResolver, string $projectDir, array $supportedLanguages, bool $translationEnabled, bool $userAgentEnabled, ContainerInterface $container)
     {
         $this->request = $request->getCurrentRequest();
         $this->projectDir = $projectDir;
         $this->supportedLanguages = $supportedLanguages;
         $this->translationEnabled = $translationEnabled;
         $this->userAgentEnabled = $userAgentEnabled;
+        $this->routeResolver = $routeResolver;
+        $this->container = $container;
     }
 
     /**
@@ -41,30 +53,39 @@ class CitoExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            new \Twig_Function('navigation', [$this, 'setNavigation'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new \Twig_Function('page', [$this, 'getPage'], ['needs_environment' => true, 'is_safe' => ['html']]),
-            new \Twig_Function('pagelist', [$this, 'getPagelist'], ['needs_environment' => true]),
-            new \Twig_Function('language_switch', [$this, 'getLanguageSwitch'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('navigation', [$this, 'setNavigation'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('page', [$this, 'getPage'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('pagelist', [$this, 'getPagelist'], ['needs_environment' => true]),
+            new TwigFunction('language_switch', [$this, 'getLanguageSwitch'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
     public function getFilters()
     {
         return array(
-            new \Twig_SimpleFilter('ratio', [$this, 'imageRatioAspectFilter']),
+            new TwigFilter('ratio', [$this, 'imageRatioAspectFilter']),
+            new TwigFilter('param', [$this, 'readParameter']),
         );
     }
 
-    public function getLanguageSwitch(\Twig_Environment $twig, $template)
+    public function getLanguageSwitch(Environment $twig, $template)
     {
         $template = ltrim($template, '/');
         $uri = $this->request->getPathInfo();
         $uri = ltrim(substr($uri, 3), '/');
+        $route = $this->routeResolver->resolveRealRoute($uri, $this->request->getLocale(), false);
+
+        $languages = [];
+        foreach ($this->supportedLanguages as $locale => $language) {
+            $languages[$locale]['locale'] = $locale;
+            $languages[$locale]['language'] = $language;
+            $languages[$locale]['link'] = $this->routeResolver->resolveRouteByFile($route, $locale);
+        }
 
         return $twig->render($template, [
             'locale' => $this->request->getLocale(),
-            'languages' => $this->supportedLanguages,
-            'link' => $uri
+            'languages' => $languages,
+            'route' => $route
         ]);
     }
 
@@ -75,7 +96,7 @@ class CitoExtension extends \Twig_Extension
      *
      * @return string
      */
-    public function setNavigation(\Twig_Environment $twig, $path, $options = [], $uri = null)
+    public function setNavigation(Environment $twig, $path, $options = [], $uri = null)
     {
         $path = ltrim($path, '/');
 
@@ -98,13 +119,17 @@ class CitoExtension extends \Twig_Extension
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      */
-    public function getPage(\Twig_Environment $twig, $path, $context = [])
+    public function getPage(Environment $twig, $path, $context = [])
     {
         $page = null;
 
         $path = Page::generateRelativePath($path);
         $template = $twig->load($path);
         $page = new Page($template, $context, $this->userAgentEnabled);
+
+        if ($this->translationEnabled) {
+            $page->link = $this->routeResolver->resolveRouteByFile($page->path, $this->request->getLocale());
+        }
 
         return $page;
     }
@@ -119,7 +144,7 @@ class CitoExtension extends \Twig_Extension
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      */
-    public function getPagelist(\Twig_Environment $twig, $options = [])
+    public function getPagelist(Environment $twig, $options = [])
     {
         $defaultOptions = [
             'dir' => null,
@@ -136,7 +161,12 @@ class CitoExtension extends \Twig_Extension
         $current = $this->getCurrentPage();
 
         if (isset($options['dir'])) {
-            return Pagelist::dir($twig, $this->projectDir.'pages/'.$options['dir'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $options['limit'], $this->userAgentEnabled);
+            $pagelist = Pagelist::dir($twig, $this->projectDir.'pages/'.$options['dir'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $options['limit'], $this->userAgentEnabled);
+            foreach ($pagelist as &$page)
+            if ($this->translationEnabled) {
+                $page->link = '/'.$this->routeResolver->resolveRouteByFile($page->path, $this->request->getLocale());
+            }
+            return $pagelist;
         }
 
         if (isset($options['files'])) {
@@ -146,10 +176,15 @@ class CitoExtension extends \Twig_Extension
                 }
             }
 
-            return Pagelist::files($twig, $options['files'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $this->userAgentEnabled);
+            $pagelist = Pagelist::files($twig, $options['files'], $current, $options['sortOrder'], $options['sortBy'], $options['filterBy'], $this->userAgentEnabled);
+            foreach ($pagelist as &$page)
+                if ($this->translationEnabled) {
+                    $page->link = '/'.$this->routeResolver->resolveRouteByFile($page->path, $this->request->getLocale());
+                }
+            return $pagelist;
         }
 
-        throw new MissingOptionsException('The option "dir" for directories or "fiels" for exact fiels is missing.');
+        throw new MissingOptionsException('The option "dir" for directories or "files" for exact files is missing.');
     }
 
     /**
@@ -163,7 +198,7 @@ class CitoExtension extends \Twig_Extension
         if ($this->translationEnabled) {
             $uri = substr($uri, 3);
         }
-        
+
         if (is_file($this->projectDir.'pages/'.$uri.'.html.twig')) {
             return $uri.'.html.twig';
         } else {
@@ -185,6 +220,4 @@ class CitoExtension extends \Twig_Extension
             return 1;
         }
     }
-
-
 }

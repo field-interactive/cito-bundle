@@ -3,7 +3,7 @@
 namespace FieldInteractive\CitoBundle\Exception;
 
 
-class FeedNotFoundExceptions extends \Exception
+class FeedNotFoundException extends \Exception
 {
 
 }

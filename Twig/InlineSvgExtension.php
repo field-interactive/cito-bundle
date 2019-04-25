@@ -2,6 +2,9 @@
 
 namespace FieldInteractive\CitoBundle\Twig;
 
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+
 /**
  * Class InlineSvgExtension.
  *
@@ -16,7 +19,7 @@ namespace FieldInteractive\CitoBundle\Twig;
  *
  * Inspired by https://github.com/manuelodelain/svg-twig-extension
  */
-class InlineSvgExtension extends \Twig_Extension
+class InlineSvgExtension extends AbstractExtension
 {
     /**
      * Project root directory.
@@ -43,7 +46,7 @@ class InlineSvgExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('inline_svg', [$this, 'getInlineSvg']),
+            new TwigFilter('inline_svg', [$this, 'getInlineSvg']),
         ];
     }
 
