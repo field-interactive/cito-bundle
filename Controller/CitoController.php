@@ -25,7 +25,6 @@ class CitoController extends Controller
         $url = $routeResolver->resolveRealRoute($url, $request->getLocale());
 
         $url = rtrim($url, '/');
-        var_dump($url);
 
         $translation = $this->getParameter('field_cito.translation.translation_enabled');
         if ($translation) {
@@ -105,7 +104,7 @@ class CitoController extends Controller
 
     /**
      * Gets the locale out of the url if it's in
-     * 
+     *
      * return string|false
      */
     protected function getLocaleFromUrl(string $url)
@@ -117,7 +116,7 @@ class CitoController extends Controller
 
         return $locale;
     }
-    
+
     /**
      * Checks if UserAgent is Routed
      */
