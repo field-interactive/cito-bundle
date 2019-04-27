@@ -1,6 +1,7 @@
 const Encore = require('@symfony/webpack-encore')
 const config = require('./config.json')
 const CompressionPlugin = require('compression-webpack-plugin')
+const BrotliPlugin = require('brotli-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
 Encore.setOutputPath(config.assetsPath)
@@ -26,13 +27,7 @@ Encore.setOutputPath(config.assetsPath)
     .enableVersioning(Encore.isProduction())
 
 if (Encore.isProduction()) {
-    Encore.addPlugin(
-        new CompressionPlugin({
-            test: /\.(js|css)$/,
-            cache: true
-        }),
-        10
-    )
+    // SW Generation
     Encore.addPlugin(
         new WorkboxPlugin.GenerateSW({
             globDirectory: config.assetsPath,
@@ -50,8 +45,20 @@ if (Encore.isProduction()) {
                 }
             ],
             swDest: '../../sw.js'
-        }),
-        1
+        })
+    )
+    // GZip Compression
+    Encore.addPlugin(
+        new CompressionPlugin({
+            test: /\.(js|css)$/,
+            cache: true
+        })
+    )
+    // Brotli Compression
+    Encore.addPlugin(
+        new BrotliPlugin({
+            test: /\.(js|css)$/
+        })
     )
 }
 
