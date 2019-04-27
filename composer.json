@@ -43,7 +43,7 @@
         "nochso/html-compress-twig": "^2.0",
         "swiftmailer/swiftmailer": "^6.0",
         "rezozero/mixedfeed": "^1.2",
-        "symfony/webpack-encore-bundle": "^1"
+        "symfony/webpack-encore-bundle": "^1.5"
     },
     "require-dev": {
         "symfony/dotenv": "^4.2"

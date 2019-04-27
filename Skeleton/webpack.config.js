@@ -1,6 +1,7 @@
 const Encore = require('@symfony/webpack-encore')
 const config = require('./config.json')
 const CompressionPlugin = require('compression-webpack-plugin')
+const WorkboxPlugin = require('workbox-webpack-plugin')
 
 Encore.setOutputPath(config.assetsPath)
     .setPublicPath(config.publicPath)
@@ -12,9 +13,13 @@ Encore.setOutputPath(config.assetsPath)
             path: './postcss.config.js'
         }
     })
-    .configureBabel(babelConfig => {
-        babelConfig.presets.push('env')
+    .configureBabel(() => {}, {
+        useBuiltIns: 'usage',
+        corejs: 3
     })
+    .splitEntryChunks()
+    .enableSingleRuntimeChunk()
+    .autoProvidejQuery()
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
@@ -25,7 +30,28 @@ if (Encore.isProduction()) {
         new CompressionPlugin({
             test: /\.(js|css)$/,
             cache: true
-        }), 10
+        }),
+        10
+    )
+    Encore.addPlugin(
+        new WorkboxPlugin.GenerateSW({
+            globDirectory: config.assetsPath,
+            globPatterns: [
+                '**/*.{gz,js,css,jpg,JPG,png,ico,otf,eot,ttf,woff,woff2,svg}'
+            ],
+            runtimeCaching: [
+                {
+                    urlPattern: new RegExp('/de/(.*)'),
+                    handler: 'staleWhileRevalidate'
+                },
+                {
+                    urlPattern: new RegExp('/en/(.*)'),
+                    handler: 'staleWhileRevalidate'
+                }
+            ],
+            swDest: '../../sw.js'
+        }),
+        1
     )
 }
 

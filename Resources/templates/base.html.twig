@@ -2,91 +2,77 @@
 {# cito #}
 <html lang="de">
 
-<head>
-    {% block head %}
+    <head>
+        {% block head %}
 
-    <title>{% block title %}{% endblock %}</title>
+            <title>
+                {% block title %}{% endblock %}
+            </title>
 
-    <meta name="description" content="{% block description %}{% endblock %}">
+            <meta name="description" content="{% block description %}{% endblock %}">
 
-    <meta property="og:title" content="{{ block('title') }}">
-    <meta property="og:image" content="{% block ogimage %}{% endblock %}">
-    <meta property="og:description" content="{{ block('description') }}">
+            <meta property="og:title" content="{{ block('title') }}">
+            <meta property="og:image" content="{% block ogimage %}{% endblock %}">
+            <meta property="og:description" content="{{ block('description') }}">
 
-    <meta charset="UTF-8">
+            <meta charset="UTF-8">
 
-    {% block canonical %}{% endblock %}
+            {% block canonical %}{% endblock %}
 
-    <meta name="robots" content="noarchive">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+            <meta content="noarchive" name="robots">
+            <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
 
-    <meta name="theme-color" content="#f2f2f2">
-    <meta name="msapplication-navbutton-color" content="#f2f2f2">
-    <meta name="msapplication-TileColor" content="#f2f2f2">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+            <meta content="#f2f2f2" name="theme-color">
+            <meta content="#f2f2f2" name="msapplication-navbutton-color">
+            <meta content="#f2f2f2" name="msapplication-TileColor">
+            <meta content="yes" name="apple-mobile-web-app-capable">
+            <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style">
 
-    <link rel="stylesheet" href="{{ asset('assets/build/css/main.css') }}">
-    <link rel="preload" href="{{ asset('assets/build/css/main.css') }}" as="style">
+            {{ encore_entry_link_tags('css/main') }}
 
-    {% block stylesheets %}{% endblock %}
-
-    {% endblock %}
-</head>
-
-<body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
-
-    <header id="header">
-        {% block header %}
-
-            {% include 'partials/headers/navSlideRightHeader.html.twig' %}
+            {% block stylesheets %}{% endblock %}
 
         {% endblock %}
-    </header>
+    </head>
 
-    <section id="main">
-        {% block body %}{% endblock %}
-    </section>
+    <body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
 
-    <footer id="footer">
-        {% block footer %}
+        <header id="header">
+            {% block header %}
 
-            {% include 'partials/footer.html.twig' %}
+                {% include 'partials/headers/navSlideRightHeader.html.twig' %}
 
-        {% endblock %}
-    </footer>
+            {% endblock %}
+        </header>
 
-    <div style="display: none">
-        {{ asset('assets/image/layout/logo.svg')|inline_svg()|raw }}
-    </div>
+        <section id="main">
+            {% block body %}{% endblock %}
+        </section>
 
-    <script src="{{ asset('assets/build/js/main.js') }}"></script>
+        <footer id="footer">
+            {% block footer %}
 
-    {% block javascripts %}{% endblock %}
+                {% include 'partials/footer.html.twig' %}
 
-    <script type="application/javascript">
-        (function (w, d) {
-            var b = d.getElementsByTagName('body')[0];
-            var s = d.createElement("script")
-            s.async = true
-            s.defer = true
-            var v = !("IntersectionObserver" in w) ? "8.7.1" : "10.5.2"
-            s.src = "https://cdnjs.cloudflare.com/ajax/libs/vanilla-lazyload/" + v + "/lazyload.min.js"
-            w.lazyLoadOptions = [{
-                elements_selector: '.lazy'
-            }, {} ];
-            b.appendChild(s)
-        }(window, document))
+            {% endblock %}
+        </footer>
 
-        if (location.protocol === 'https:' || location.hostname === "localhost" || location.hostname === "127.0.0.1") {
+        <div style="display: none">
+            {{ asset('assets/image/layout/logo.svg')|inline_svg()|raw }}
+        </div>
+
+        {% for file in encore_entry_js_files('js/main') %}
+            <script src="{{ asset(file) }}" defer async></script>
+        {% endfor %}
+
+        <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('./sw.js');
-                });
+                    navigator.serviceWorker.register('/sw.js')
+                })
             }
-        }
-    </script>
+        </script>
 
-</body>
-
-</html>
+        {% block javascripts %}{% endblock %}
+    </body>
+</body></html>
