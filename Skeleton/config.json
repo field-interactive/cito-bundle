@@ -14,7 +14,6 @@
   "scripts": {
     "frontend": {
       "src": [
-        "@babel/polyfill",
         "./public/assets/js/default.js"
       ],
       "dest": "js/main"
