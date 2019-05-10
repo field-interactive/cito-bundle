@@ -73,11 +73,6 @@ services:
         tags:
             - { name: twig.extension }
 
-    FieldInteractive\CitoBundle\Twig\SocialMediaExtension:
-        public: true
-        tags:
-            - { name: twig.extension }
-
     FieldInteractive\CitoBundle\Twig\UserAgentExtension:
         public: true
         arguments: ['@twig', '%field_cito.routing.user_agent_enabled%', '%field_cito.routing.user_agent_routing%', '%field_cito.routing.default_user_agent%']

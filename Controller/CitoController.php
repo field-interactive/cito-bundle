@@ -116,7 +116,7 @@ class CitoController extends Controller
 
         return $locale;
     }
-    
+
     /**
      * Checks if UserAgent is Routed
      */

@@ -4,8 +4,8 @@
 
 ## Setup
 ### Installation
-- clone the completed project from Gitlab
-    - `git clone https://gitlab.com/myboom/cito-symfony.git`
+- clone the completed project from Github
+    - `git clone https://github.com/field-interactive/cito-bundle.git`
 - or create a new project with composer
     - `composer create-project field-interactive/cito-skeleton`
 

@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "sideEffects": false,
   "devDependencies": {
-    "@babel/core": "^7.1.0",
-    "@babel/preset-env": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
     "@symfony/webpack-encore": "^0.20.1",
     "autoprefixer": "^9.1.5",
     "compression-webpack-plugin": "^1.1.11",
-    "node-sass": "^4.9.3",
+    "node-sass": "^4.10.0",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
     "webpack-notifier": "^1.6.0"
