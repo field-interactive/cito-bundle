@@ -1,30 +1,28 @@
-const Encore = require('@symfony/webpack-encore')
-const config = require('./config.json')
-const CompressionPlugin = require('compression-webpack-plugin')
-// const BrotliPlugin = require('brotli-webpack-plugin')
-const WorkboxPlugin = require('workbox-webpack-plugin')
+const Encore = require('@symfony/webpack-encore');
+const config = require('./config.json');
+const CompressionPlugin = require('compression-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
 
 Encore.setOutputPath(config.assetsPath)
-    .setPublicPath(config.publicPath)
-    .addEntry(config.scripts.frontend.dest, config.scripts.frontend.src)
-    .addStyleEntry(config.styles.frontend.dest, config.styles.frontend.src)
-    .enableSassLoader()
-    .enablePostCssLoader(options => {
-        options.config = {
-            path: './postcss.config.js'
-        }
-    })
-    .configureBabel(() => {}, {
-        useBuiltIns: 'usage',
-        corejs: 3
-    })
-    .splitEntryChunks()
-    .enableSingleRuntimeChunk()
-    .autoProvidejQuery()
-    .cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
-    .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
+      .setPublicPath(config.publicPath)
+      .addEntry(config.scripts.frontend.dest, config.scripts.frontend.src)
+      .addStyleEntry(config.styles.frontend.dest, config.styles.frontend.src)
+      .enableSassLoader()
+      .enablePostCssLoader(options => {
+          options.config = {
+              path: './postcss.config.js'
+          };
+      })
+      .configureBabel(() => {}, {
+          useBuiltIns: 'usage',
+          corejs: 3
+      })
+      .disableSingleRuntimeChunk()
+      .autoProvidejQuery()
+      .cleanupOutputBeforeBuild()
+      .enableBuildNotifications()
+      .enableSourceMaps(!Encore.isProduction())
+      .enableVersioning(Encore.isProduction());
 
 if (Encore.isProduction()) {
     // SW Generation
@@ -46,20 +44,14 @@ if (Encore.isProduction()) {
             ],
             swDest: '../../sw.js'
         })
-    )
+    );
     // GZip Compression
     Encore.addPlugin(
         new CompressionPlugin({
             test: /\.(js|css)$/,
             cache: true
         })
-    )
-    // Brotli Compression
-    // Encore.addPlugin(
-    //     new BrotliPlugin({
-    //         test: /\.(js|css)$/
-    //     })
-    // )
+    );
 }
 
-module.exports = Encore.getWebpackConfig()
+module.exports = Encore.getWebpackConfig();
