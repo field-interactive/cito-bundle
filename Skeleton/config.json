@@ -5,7 +5,7 @@
   "styles": {
     "frontend": {
       "src": [
-        "./public/assets/sass/default.sass"
+        "./public/assets/sass/app.sass"
       ],
       "dest": "css/main"
     }
@@ -14,7 +14,7 @@
   "scripts": {
     "frontend": {
       "src": [
-        "./public/assets/js/default.js"
+        "./public/assets/js/app.js"
       ],
       "dest": "js/main"
     }

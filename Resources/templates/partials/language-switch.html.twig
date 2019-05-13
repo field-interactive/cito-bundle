@@ -1,7 +1,0 @@
-<ul>
-    {% for language  in languages %}
-        <li>
-            <a href="/{{ language.location }}/{{ language.link }}" class="{{ (language.location == locale) ? 'active' : '' }}">{{ language.language }}</a>
-        </li>
-    {% endfor %}
-</ul>
