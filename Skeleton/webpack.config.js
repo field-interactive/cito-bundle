@@ -17,6 +17,18 @@ Encore.setOutputPath(config.assetsPath)
         useBuiltIns: 'usage',
         corejs: 3
     })
+    .splitEntryChunks()
+    .configureSplitChunks(splitChunks => {
+        splitChunks.minSize = 0;
+    })
+    .configureTerserPlugin(options => {
+        options.cache = true;
+        options.terserOptions = {
+            output: {
+                comments: false
+            }
+        };
+    })
     .disableSingleRuntimeChunk()
     .autoProvidejQuery()
     .cleanupOutputBeforeBuild()
