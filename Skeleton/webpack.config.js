@@ -2,6 +2,7 @@ const Encore = require('@symfony/webpack-encore');
 const config = require('./config.json');
 const CompressionPlugin = require('compression-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
+const path = require('path');
 
 Encore.setOutputPath(config.assetsPath)
     .setPublicPath(config.publicPath)
@@ -66,4 +67,28 @@ if (Encore.isProduction()) {
     );
 }
 
-module.exports = Encore.getWebpackConfig();
+const fullConfig = Encore.getWebpackConfig();
+
+fullConfig.name = 'full';
+fullConfig.watchOptions = {
+    poll: true,
+    ignored: /node_modules/
+};
+
+// Requires symfony server to be configured to serve on localhost:8000
+fullConfig.devServer = {
+    public: 'localhost:8000',
+    allowedHosts: ['localhost:8000'],
+    contentBase: path.join(__dirname, 'public/'),
+    watchContentBase: true,
+    compress: true,
+    open: true,
+    disableHostCheck: true,
+    progress: true,
+    watchOptions: {
+        watch: true,
+        poll: true
+    }
+};
+
+module.exports = fullConfig;
