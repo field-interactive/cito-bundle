@@ -13,7 +13,7 @@ const cookies = _ => {
     agree.addEventListener('click', e => {
         event.preventDefault();
         notice.parentNode.removeChild(notice);
-        Cookies.set('cookieNotice', 'accepted', {expires: 365});
+        Cookies.set('cookieNotice', 'accepted', { expires: 365 });
     });
 };
 

@@ -11,9 +11,12 @@ const loadPolyfill = async _ => {
 const lazyload = _ => {
     loadPolyfill();
     setImageHeight();
-    const lazyloadInstanze = new LazyLoad([{
-        elements_selector: '.lazy'
-    }, {}]);
+    const lazyloadInstanze = new LazyLoad([
+        {
+            elements_selector: '.lazy'
+        },
+        {}
+    ]);
 };
 
 export { lazyload };

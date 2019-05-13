@@ -4,25 +4,25 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin');
 
 Encore.setOutputPath(config.assetsPath)
-      .setPublicPath(config.publicPath)
-      .addEntry(config.scripts.frontend.dest, config.scripts.frontend.src)
-      .addStyleEntry(config.styles.frontend.dest, config.styles.frontend.src)
-      .enableSassLoader()
-      .enablePostCssLoader(options => {
-          options.config = {
-              path: './postcss.config.js'
-          };
-      })
-      .configureBabel(() => {}, {
-          useBuiltIns: 'usage',
-          corejs: 3
-      })
-      .disableSingleRuntimeChunk()
-      .autoProvidejQuery()
-      .cleanupOutputBeforeBuild()
-      .enableBuildNotifications()
-      .enableSourceMaps(!Encore.isProduction())
-      .enableVersioning(Encore.isProduction());
+    .setPublicPath(config.publicPath)
+    .addEntry(config.scripts.frontend.dest, config.scripts.frontend.src)
+    .addStyleEntry(config.styles.frontend.dest, config.styles.frontend.src)
+    .enableSassLoader()
+    .enablePostCssLoader(options => {
+        options.config = {
+            path: './postcss.config.js'
+        };
+    })
+    .configureBabel(() => {}, {
+        useBuiltIns: 'usage',
+        corejs: 3
+    })
+    .disableSingleRuntimeChunk()
+    .autoProvidejQuery()
+    .cleanupOutputBeforeBuild()
+    .enableBuildNotifications()
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction());
 
 if (Encore.isProduction()) {
     // SW Generation
