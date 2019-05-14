@@ -186,6 +186,8 @@ Available variables
 - `link` -> current URL (without TLD and locale)
 - `languages` -> an `Array` of available languages with locale as key and name as value
 
+The array is build from the points of `translation_support` in List in the `cito.yaml`.
+
 Example:
 `language-switch.html.twig`
 
