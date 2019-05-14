@@ -8,13 +8,14 @@ use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * Class ContactType
  * @package FieldInteractive\CitoBundle\Form
  */
-class ContactType extends AbstractType
+class ContactType extends CitoForm
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -27,5 +28,16 @@ class ContactType extends AbstractType
             ->add('message', TextareaType::class)
             ->add('submit', SubmitType::class, ['label' => 'Send Mail'])
         ;
+    }
+
+    /**
+     * Handles the data after submit
+     *
+     * @param Form $form
+     * @return mixed
+     */
+    public static function postSubmit(Form $form)
+    {
+        // TODO: Implement postSubmit() method.
     }
 }

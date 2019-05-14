@@ -2,13 +2,12 @@
 
 namespace FieldInteractive\CitoBundle\Controller;
 
-use FieldInteractive\CitoBundle\Form\ContactType;
 use FieldInteractive\CitoBundle\Service\RouteResolverService;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CitoController extends Controller
+class CitoController extends AbstractController
 {
     public static $pagesPath;
 
