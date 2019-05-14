@@ -40,9 +40,8 @@
         "symfony/process": "^3.0|^4.2",
         "liip/imagine-bundle": "^2.0",
         "composer/ca-bundle": "^1",
-        "nochso/html-compress-twig": "^2.0",
         "swiftmailer/swiftmailer": "^6.0",
-        "rezozero/mixedfeed": "^1.2"
+        "symfony/webpack-encore-bundle": "^1.5"
     },
     "require-dev": {
         "symfony/dotenv": "^4.2"
@@ -61,5 +60,11 @@
     },
     "extra": {
         "pages-dir": "pages"
-    }
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/field-interactive/webpack-encore-bundle"
+        }
+    ]
 }

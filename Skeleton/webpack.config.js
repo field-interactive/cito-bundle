@@ -1,6 +1,8 @@
-const Encore = require('@symfony/webpack-encore')
-const config = require('./config.json')
-const CompressionPlugin = require('compression-webpack-plugin')
+const Encore = require('@symfony/webpack-encore');
+const config = require('./config.json');
+const CompressionPlugin = require('compression-webpack-plugin');
+const WorkboxPlugin = require('workbox-webpack-plugin');
+const path = require('path');
 
 Encore.setOutputPath(config.assetsPath)
     .setPublicPath(config.publicPath)
@@ -10,23 +12,83 @@ Encore.setOutputPath(config.assetsPath)
     .enablePostCssLoader(options => {
         options.config = {
             path: './postcss.config.js'
-        }
+        };
     })
-    .configureBabel(babelConfig => {
-        babelConfig.presets.push('env')
+    .configureBabel(() => {}, {
+        useBuiltIns: 'usage',
+        corejs: 3
     })
+    .splitEntryChunks()
+    .configureSplitChunks(splitChunks => {
+        splitChunks.minSize = 0;
+    })
+    .configureTerserPlugin(options => {
+        options.cache = true;
+        options.terserOptions = {
+            output: {
+                comments: false
+            }
+        };
+    })
+    .disableSingleRuntimeChunk()
+    .autoProvidejQuery()
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
     .enableSourceMaps(!Encore.isProduction())
-    .enableVersioning(Encore.isProduction())
+    .enableVersioning(Encore.isProduction());
 
 if (Encore.isProduction()) {
+    // SW Generation
+    Encore.addPlugin(
+        new WorkboxPlugin.GenerateSW({
+            globDirectory: config.assetsPath,
+            globPatterns: [
+                '**/*.{gz,js,css,jpg,JPG,png,ico,otf,eot,ttf,woff,woff2,svg}'
+            ],
+            runtimeCaching: [
+                {
+                    urlPattern: new RegExp('/de/(.*)'),
+                    handler: 'staleWhileRevalidate'
+                },
+                {
+                    urlPattern: new RegExp('/en/(.*)'),
+                    handler: 'staleWhileRevalidate'
+                }
+            ],
+            swDest: '../../sw.js'
+        })
+    );
+    // GZip Compression
     Encore.addPlugin(
         new CompressionPlugin({
             test: /\.(js|css)$/,
             cache: true
-        }), 10
-    )
+        })
+    );
 }
 
-module.exports = Encore.getWebpackConfig()
+const fullConfig = Encore.getWebpackConfig();
+
+fullConfig.name = 'full';
+fullConfig.watchOptions = {
+    poll: true,
+    ignored: /node_modules/
+};
+
+// Requires symfony server to be configured to serve on localhost:8000
+fullConfig.devServer = {
+    public: 'localhost:8000',
+    allowedHosts: ['localhost:8000'],
+    contentBase: path.join(__dirname, 'public/'),
+    watchContentBase: true,
+    compress: true,
+    open: true,
+    disableHostCheck: true,
+    progress: true,
+    watchOptions: {
+        watch: true,
+        poll: true
+    }
+};
+
+module.exports = fullConfig;

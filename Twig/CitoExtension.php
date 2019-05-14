@@ -64,7 +64,6 @@ class CitoExtension extends AbstractExtension
     {
         return array(
             new TwigFilter('ratio', [$this, 'imageRatioAspectFilter']),
-            new TwigFilter('param', [$this, 'readParameter']),
         );
     }
 

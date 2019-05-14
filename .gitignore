@@ -1,2 +1,5 @@
 .idea
 php-cs-fixer-v2
+.DS_Store
+vendor
+composer.lock
