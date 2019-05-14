@@ -9,6 +9,8 @@ parameters:
     field_cito.translation.translation_enabled: false
     field_cito.translation.translation_support: []
     social_media: []
+    forms_namespace: 'App\Form'
+    forms_dir: '%kernel.project_dir%/src/Form'
 
 services:
     # default configuration for services in *this* file
@@ -53,6 +55,11 @@ services:
             $translationEnabled: "%field_cito.translation.translation_enabled%"
         tags:
             - { name: "RouteResolverService" }
+
+    FieldInteractive\CitoBundle\Service\FormProvider:
+        arguments:
+            $formDir: '%forms_dir%'
+            $formNamespace: '%forms_namespace%'
 
     FieldInteractive\CitoBundle\Twig\CitoExtension:
         public: true
