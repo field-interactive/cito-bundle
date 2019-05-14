@@ -160,6 +160,22 @@ class FormProvider
     }
 
     /**
+     * Creates the View for the Forms
+     *
+     * @return array
+     */
+    public function createFormViews()
+    {
+        $views = [];
+        foreach ($this->forms as $form) {
+            $name = $this->SnakecaseToCamelcase($form->getName());
+            $views[$name] = $form->createView();
+        }
+
+        return $views;
+    }
+
+    /**
      * @param string $type
      * @param null $data
      * @param array $options

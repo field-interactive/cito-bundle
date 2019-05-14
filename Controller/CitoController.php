@@ -2,6 +2,7 @@
 
 namespace FieldInteractive\CitoBundle\Controller;
 
+use FieldInteractive\CitoBundle\Service\FormProvider;
 use FieldInteractive\CitoBundle\Service\RouteResolverService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,10 +20,9 @@ class CitoController extends AbstractController
     /**
      * @Route("/{url}", name="field_cito_z", requirements={"url": "((?!_wdt|_profiler|_error).+)?"})
      */
-    public function zAction(Request $request, RouteResolverService $routeResolver, $url)
+    public function zAction(Request $request, RouteResolverService $routeResolver, FormProvider $formProvider, $url)
     {
         $url = $routeResolver->resolveRealRoute($url, $request->getLocale());
-
         $url = rtrim($url, '/');
 
         $translation = $this->getParameter('field_cito.translation.translation_enabled');
@@ -34,6 +34,9 @@ class CitoController extends AbstractController
             }
         }
 
+        $formProvider->processAllForms($request);
+        $formViews = $formProvider->createFormViews();
+
         if ($this->getParameter('field_cito.routing.user_agent_enabled') === true && !$this->isUARouted($url)) {
             $routingData = $this->getParameter('field_cito.routing.user_agent_routing');
             $defaultRoute = $this->getParameter('field_cito.routing.default_user_agent');
@@ -41,9 +44,9 @@ class CitoController extends AbstractController
             $selectedRoute = self::getSelectedRoute($routingData, $defaultRoute);
 
             if (is_file(self::$pagesPath.$selectedRoute . "/" . $url.'.html.twig')) {
-                return $this->render($selectedRoute . "/" . $url.'.html.twig');
+                return $this->render($selectedRoute . "/" . $url.'.html.twig', ['forms' => $formViews]);
             } elseif (is_file(self::$pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig')) {
-                return $this->render($selectedRoute . "/" . $url.'/index.html.twig');
+                return $this->render($selectedRoute . "/" . $url.'/index.html.twig', ['forms' => $formViews]);
             } else {
                 $errMsg = $selectedRoute . "/" . $url.' not found! Searched for '.self::$pagesPath.$selectedRoute . "/" . $url.'.html.twig and '.self::$pagesPath.$selectedRoute . ($url !== "" ? "/" : "") . $url.'/index.html.twig!';
                 throw $this->createNotFoundException($errMsg);
@@ -51,9 +54,9 @@ class CitoController extends AbstractController
         }
 
         if (is_file(self::$pagesPath.$url.'.html.twig')) {
-            return $this->render($url.'.html.twig');
+            return $this->render($url.'.html.twig', ['forms' => $formViews]);
         } elseif (is_file(self::$pagesPath.$url.'/index.html.twig')) {
-            return $this->render($url.'/index.html.twig');
+            return $this->render($url.'/index.html.twig', ['forms' => $formViews]);
         }
 
         $errMsg = $url.' not found! Searched for '.self::$pagesPath.$url.'.html.twig and '.self::$pagesPath.$url.'/index.html.twig!';
