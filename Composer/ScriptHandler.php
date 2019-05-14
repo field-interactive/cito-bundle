@@ -48,7 +48,7 @@ class ScriptHandler
             $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', null, ['override' => true]);
         }
 
-        if (!$fs->exists($publicDir)) {
+        if (!$fs->exists($publicDir.'/assets/')) {
             $fs->mirror(__DIR__ . '/../Resources/public/', $publicDir);
         }
     }
