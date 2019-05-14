@@ -13,6 +13,7 @@
   - [Useragent](#-useragent)
 - [Twig](#twig)
   - [Navigation](#navigtaion)
+      - [Options](#options)
   - [Language Switch](#language-switch)
   - [Inline SVG](#inline-svg)
   - [Picture Macro](#picture-macro)
@@ -148,7 +149,63 @@ pages/
 
 ## Twig
 ### Navigtaion
+Hands over a `ul`-list with Links and sets the `class="active"` to the anchor tag which matches the current URL.
+
+Example:
+`navigation.html.twig`
+````html
+<ul>
+    <li><a href="/my/url-1">Seite 1</a></li>
+    <li><a href="/my/url-2">Seite 2</a></li>
+</ul>
+````
+`base.html.twig`
+````twig
+{{ navigation('path/to/navigation.html.twig') }}
+````
+
+#### Options
+**Breadcrumb**
+`base.html.twig`
+````twig
+{{ navigation('path/to/navigation.html.twig', {'breadcrumbs': true}) }}
+````
+
+**Range**
+````twig
+{# Just Level 2 #}
+{{ navigation('path/to/navigation.html.twig', {'range': 2}) }}
+{# Level 2 to 4 #}
+{{ navigation('path/to/navigation.html.twig', {'range': [2,4]}) }}
+````
+
 ### Language Switch
+Hands over a template for the language switch.<br>
+Available variables
+- `locale` -> current Locale
+- `link` -> current URL (without TLD and locale)
+- `languages` -> an `Array` of available languages with locale as key and name as value
+
+Example:
+`language-switch.html.twig`
+
+````twig
+<ul>
+{% for loc, language  in languages %}
+    <li>
+        <a href="/{{ loc }}/{{ link }}" {% if(loc == locale) %}class="active"{% endif %}>
+        {{ language }}
+        </a>
+    </li>
+{% endfor %}
+</ul>
+````
+
+`base.html.twig`
+````twig
+ {{ language_switch('path/to/language-switch.html.twig') }}
+````
+
 ### Inline SVG
 ### Picture Macro
 ### Pages
