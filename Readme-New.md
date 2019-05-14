@@ -111,7 +111,7 @@ Example:
 `cito.yaml`
 ```yaml
 translation_support:
-    de: Detusch
+    de: Deutsch
     en: English
     es: Español
 ```
@@ -131,7 +131,7 @@ user_agent_routing:
     old: 'ie < 11, opera < 52'
 ````
 
-*Every brwoser except < IE 11 and Opera < 52 are routed to the new folder
+*Every browser except < IE 11 and Opera < 52 are routed to the new folder
 
 Pagesfolder:
 ```
