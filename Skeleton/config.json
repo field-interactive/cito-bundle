@@ -1,6 +1,6 @@
 {
-  "publicPath": "/assets/build",
-  "assetsPath": "public/assets/build",
+  "publicPath": "/build",
+  "assetsPath": "public/build",
   "styles": {
       "frontend": {
           "src": [

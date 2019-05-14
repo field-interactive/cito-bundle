@@ -95,7 +95,7 @@ class ScriptHandler
          if ($fs->exists($configDir . '/packages/framework.yaml') && !empty(Yaml::parseFile($configDir . '/packages/framework.yaml'))) {
              $frameworkYaml = Yaml::parseFile($configDir . '/packages/framework.yaml');
              if (!array_key_exists('assets', $frameworkYaml['framework']) || !is_array($frameworkYaml['framework']['assets']) || !in_array('json_manifest_path', $frameworkYaml['framework']['assets'])) {
-                 $frameworkYaml['framework']['assets'] = ['json_manifest_path' => '%kernel.project_dir%/public/assets/build/manifest.json'];
+                 $frameworkYaml['framework']['assets'] = ['json_manifest_path' => '%kernel.project_dir%/public/build/manifest.json'];
              }
              // safe new framework.yaml
              $yaml = Yaml::dump($frameworkYaml, 99);
