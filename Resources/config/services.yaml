@@ -6,7 +6,6 @@ parameters:
     field_cito.routing.user_agent_routing: []
     field_cito.translation.translation_enabled: false
     field_cito.translation.translation_support: []
-    social_media: []
 
 services:
     # default configuration for services in *this* file
