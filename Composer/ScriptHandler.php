@@ -30,7 +30,6 @@ class ScriptHandler
     public static function installTemplateFiles(Event $event)
     {
         $options = static::getOptions($event);
-        $configDir = $options['symfony-config-dir'];
         $pagesDir = $options['cito-pages-dir'];
         $publicDir = $options['symfony-public-dir'];
         $templateDir = $options['symfony-template-dir'];
@@ -49,20 +48,9 @@ class ScriptHandler
             $fs->mirror(__DIR__ . '/../Resources/templates/', $templateDir . '/', null, ['override' => true]);
         }
 
-        // Add public files
-        if (!$fs->exists($publicDir . '/.htaccess')) {
-            $fs->copy(__DIR__ . '/../Resources/public/.htaccess', $publicDir . '/.htaccess', true);
+        if (!$fs->exists($publicDir)) {
+            $fs->mirror(__DIR__ . '/../Resources/public/', $publicDir);
         }
-        if (!$fs->exists($publicDir . '/assets/js/default.js')) {
-            $fs->copy(__DIR__ . '/../Resources/public/assets/js/default.js', $publicDir . '/assets/js/default.js');
-        }
-        if (!$fs->exists($publicDir . '/assets/sass/default.sass')) {
-            $fs->mirror(__DIR__ . '/../Resources/public/assets/sass', $publicDir . '/assets/sass');
-        }
-        if (!$fs->exists($publicDir . '/assets/image/layout/logo.svg')) {
-            $fs->copy(__DIR__ . '/../Resources/public/assets/image/layout/logo.svg', $publicDir . '/assets/image/layout/logo.svg');
-        }
-        $fs->mkdir($publicDir . '/assets/fonts');
     }
 
     /**
@@ -157,18 +145,20 @@ class ScriptHandler
         $publicDir = $options['symfony-public-dir'];
         $fs = new Filesystem();
 
-        if (!$fs->exists($publicDir . '/../config.json')) {
-            $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
-        }
-        if (!$fs->exists($publicDir . '/../package.json')) {
-            $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', false);
-        }
-        if (!$fs->exists($publicDir . '/../postcss.config.js')) {
-            $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', false);
-        }
-        if (!$fs->exists($publicDir . '/../webpack.config.js')) {
-            $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', false);
-        }
+        $fs->mirror(__DIR__ . '/../Skeleton/', $publicDir.'/../');
+
+//        if (!$fs->exists($publicDir . '/../config.json')) {
+//            $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
+//        }
+//        if (!$fs->exists($publicDir . '/../package.json')) {
+//            $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', false);
+//        }
+//        if (!$fs->exists($publicDir . '/../postcss.config.js')) {
+//            $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', false);
+//        }
+//        if (!$fs->exists($publicDir . '/../webpack.config.js')) {
+//            $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', false);
+//        }
 
         // Additional information
         echo 'You can now do a npm install for the javascript packages.';
@@ -184,37 +174,29 @@ class ScriptHandler
     {
         $options = static::getOptions($event);
         $configDir = $options['symfony-config-dir'];
-        $templateDir = $options['symfony-template-dir'];
         $fs = new Filesystem();
 
         /*
          * Update config/packages/cito.yaml
          */
-        $yaml = Yaml::parseFile($configDir . '/packages/cito.yaml');
-        if (!array_key_exists('user_agent_enabled', $yaml['cito'])) {
-            $yaml['cito']['user_agent_enabled'] = false;
-        }
-        if (!array_key_exists('default_user_agent', $yaml['cito'])) {
-            $yaml['cito']['default_user_agent'] = 'new';
-        }
-        if (!array_key_exists('user_agent_routing', $yaml['cito'])) {
-            $yaml['cito']['user_agent_routing'] = [
-                'new' => 'ie 11, opera > 52',
-                'old' => 'ie < 11, opera < 52'
-            ];
-        }
-        if (!array_key_exists('translation_enabled', $yaml['cito'])) {
-            $yaml['cito']['translation_enabled'] = false;
-        }
-        if (!array_key_exists('translation_support', $yaml['cito'])) {
-            $yaml['cito']['translation_support'] = [
-                'de' => 'Deutsch',
-                'en' => 'Englisch'
-            ];
-        }
+        $local = Yaml::parseFile($configDir . '/packages/cito.yaml');
+        $current = Yaml::parseFile(__DIR__ . '/../Resources/config/packages/cito.yaml');
+
+        self::updateArray($local, $current);
 
         $fs->remove($configDir . '/packages/cito.yaml');
-        $fs->dumpFile($configDir . '/packages/cito.yaml', Yaml::dump($yaml, 99));
+        $fs->dumpFile($configDir . '/packages/cito.yaml', Yaml::dump($local, 99));
+    }
+
+    protected static function updateArray(array &$local, array $current)
+    {
+        foreach ($current as $key => $item) {
+            if (!array_key_exists($key, $local)) {
+                $local[$key] = $item;
+            } elseif (is_array($item)) {
+                self::updateArray($local[$key], $item);
+            }
+        }
     }
 
     protected static function getOptions(Event $event)
