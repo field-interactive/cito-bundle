@@ -1,5 +1,3 @@
-# Put parameters here that don't need to change on each machine where the app is deployed
-# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     field_cito.dir.pages: '%kernel.project_dir%/pages/'
     field_cito.dir.posts: '%kernel.project_dir%/public/posts/'
@@ -35,17 +33,6 @@ services:
         arguments:
             - '%field_cito.dir.pages%'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    FieldInteractive\CitoBundle\Service\SocialMediaService:
-            public: true
-            arguments:
-                $socialMedia: "%social_media%"
-                $postsPath: "%field_cito.dir.posts%"
-                $projectDir: "%kernel.project_dir%/public"
-            tags:
-                - { name: "SocialMediaService" }
-
     FieldInteractive\CitoBundle\Service\RouteResolverService:
         public: true
         arguments:
@@ -78,8 +65,3 @@ services:
         arguments: ['@twig', '%field_cito.routing.user_agent_enabled%', '%field_cito.routing.user_agent_routing%', '%field_cito.routing.default_user_agent%']
         tags:
         - { name: twig.extension }
-
-    nochso.html_compress_extension:
-        class: nochso\HtmlCompressTwig\Extension
-        tags:
-            - { name: twig.extension }
