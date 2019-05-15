@@ -38,6 +38,7 @@
         "symfony/yaml": "^4.2",
         "symfony/filesystem": "^3.0|^4.2",
         "symfony/process": "^3.0|^4.2",
+        "symfony/translation": "^4.2",
         "liip/imagine-bundle": "^2.0",
         "composer/ca-bundle": "^1",
         "swiftmailer/swiftmailer": "^6.0",

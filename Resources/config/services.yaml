@@ -73,3 +73,8 @@ services:
         arguments: ['@twig', '%field_cito.routing.user_agent_enabled%', '%field_cito.routing.user_agent_routing%', '%field_cito.routing.default_user_agent%']
         tags:
         - { name: twig.extension }
+
+    FieldInteractive\CitoBundle\Command\CreateFormCommand:
+        arguments:
+            $namespace: '%forms_namespace%'
+            $directory: '%forms_dir%'
