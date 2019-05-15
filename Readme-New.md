@@ -209,10 +209,80 @@ Example:
 ````
 
 ### Inline SVG
+This function allows to inline the SVG in your markup. You can add attributes like classes, id's, data-attr...
+
+Example: `base.html.twig`
+Renders the raw SVG Markup
+```twig
+{{ asset('path/to/image.svg')|inline_svg({attr: {class: 'your-class your-second-class', id: 'svg-1'}})|raw }}
+```
+
+Renders the SVG
+```twig
+{{ asset('path/to/image.svg')|inline_svg({attr: {class: 'your-class your-second-class', id: 'svg-1'}})}}
+```
+
 ### Picture Macro
+Generates a `picture`-tag with for given sizes. The sizes need to be defined for each image. The Size-Array can have max. 6 entries.
+
+Example: `somepage.html.twig`
+
+````twig
+{% import '@Cito/macros.html.twig' as macro %} // The Macro needs to be imported at the top of the page, on every page this is used!
+{{ macro.picture('/path/to/image.jpg', [1200, 900, 600]) }}
+````
+
 ### Pages
+Allows to get content / attributes from other pages like:
+- **blocks**: Blocks used on the page
+- **link**: Link to the page without locale
+- **name**: Name of the page (Filename)
+- **fullPath**: Absolute Path to File
+- **path**: Relative Path to File (starts at project directory)
+
+Example: `page.html.twig`
+
+```twig
+{{ page('path/to/page.html.twig').blocks.title }} -> renders content of Block Title
+```
 ### Page Lists
+Loads a directory or array of file paths as array of page objects. The page, this function is used on, **is not** shown.
+
+Example: `somepage.html.twig`
+
+```twig
+{% set pagelist = pagelist({'dir': 'path/to/dir'}) %}
+{% for page in pagelist %}
+<a href="{{ page.link }}">{{ page.name }}</a>
+{% endfor %}
+```
+
 ### HTML Compress
+The ability to compress the output html
+
+Example: `base.html.twig`
+
+```twig
+{% htmlcompress %}
+<p>
+    Hello World
+</p>
+{% endhtmlcompress %}
+```
+
+Returns
+
+```html
+<p>Hello World</p>
+```
+
+other ways to call `htmlcompress`:
+
+```twig
+{{ 'My Text'|htmlcompress }}
+{{ htmlcompress('My Text') }}
+```
+GitHub: https://github.com/nochso/html-compress-twig
 
 ---
 
