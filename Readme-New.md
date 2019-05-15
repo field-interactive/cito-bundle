@@ -292,7 +292,7 @@ Default JavScript packages:
 - [jQuery](https://github.com/jquery/jquery)
 - [js-cookie](https://github.com/js-cookie/js-cookie)
 - [vanilla-lazyload](https://github.com/verlok/lazyload)
-- Dev dependencies for [Webpack Encore](https://github.com/symfony/webpack-encore) an this Setup to work
+- Dev dependencies for [Webpack Encore](https://github.com/symfony/webpack-encore) and this configuration
 
 The default configuration is:
 
