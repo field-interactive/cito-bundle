@@ -11,7 +11,20 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 abstract class CitoForm extends AbstractType
 {
-    protected static $success = null;
+    /**
+     * @var null|Flash $flash
+     */
+    protected static $flash = null;
+
+    /**
+     * @var Container $container
+     */
+    protected static $container;
+
+    public static function setUp(Container $container)
+    {
+        self::$container = $container;
+    }
 
     /**
      * Handles the data after submit
@@ -28,7 +41,7 @@ abstract class CitoForm extends AbstractType
      */
     public static function flashMessage() : Flash
     {
-        return null;
+        return self::$flash;
     }
 
     /**
@@ -36,6 +49,6 @@ abstract class CitoForm extends AbstractType
      */
     public static function reset()
     {
-        self::$success = null;
+        self::$flash = null;
     }
 }

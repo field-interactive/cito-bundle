@@ -3,6 +3,7 @@
 namespace FieldInteractive\CitoBundle\Service;
 
 use FieldInteractive\CitoBundle\Exception\FormNotFoundException;
+use FieldInteractive\CitoBundle\Form\CitoForm;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
@@ -61,6 +62,11 @@ class FormProvider
     public function createForms()
     {
         $formDir = [];
+
+        if (!is_dir($this->formPath)) {
+            return [];
+        }
+
         $handle = dir($this->formPath)->handle;
         while($item = readdir($handle)) {
             if (!in_array($item, ['.', '..'])) {
@@ -139,7 +145,8 @@ class FormProvider
                 try {
                     if (class_exists($class)) {
                         $reflection = new \ReflectionClass($class);
-                        if ($reflection->hasMethod('postSubmit')) {
+                        if ($reflection->isSubclassOf(CitoForm::class)) {
+                            $class::setUp($this->container);
                             $result = $class::postSubmit($form);
                             if ($flash = $class::flashMessage()) {
                                 $this->container->get('session')->getFlashBag()->add($flash->type, $flash->message);
