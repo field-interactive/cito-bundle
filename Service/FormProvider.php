@@ -14,27 +14,27 @@ class FormProvider
     /**
      * @var string
      */
-    private $formPath;
+    protected $formPath;
 
     /**
      * @var string
      */
-    private $formNamespace;
+    protected $formNamespace;
 
     /**
      * @var array
      */
-    private $forms;
+    protected $forms;
 
     /**
      * @var ContainerInterface
      */
-    private $container;
+    protected $container;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    protected $logger;
 
     /**
      * FormProvider constructor.
@@ -64,6 +64,7 @@ class FormProvider
         $formDir = [];
 
         if (!is_dir($this->formPath)) {
+            $this->logger->warning('No forms folder found at '.$this->formPath);
             return [];
         }
 

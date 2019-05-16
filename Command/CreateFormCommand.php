@@ -38,7 +38,7 @@ class CreateFormCommand extends Command
     {
         $this->setName('cito:form:create')
             ->setDescription('Creates a Cito Form')
-            ->setHelp('')
+            ->setHelp('Creates a form to be used for the FormProvider')
             ->addArgument('name', InputArgument::REQUIRED,  'Name of the new form')
             ->addOption('mailer', 'm', InputOption::VALUE_NONE,  'Is a mailer required?')
         ;
