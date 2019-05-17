@@ -26,7 +26,7 @@
 
 ## Setup
 ### Requirements
-- [PHP 7.X](https://www.php.net/)
+- [PHP ^7.2](https://www.php.net/)
 - [Apache](https://httpd.apache.org/)
 - [Composer](https://getcomposer.org/)
 - [NodeJS](https://nodejs.org/en/)
@@ -35,16 +35,7 @@
 The project can run in a virtual environment ([Docker](https://www.docker.com/), [Vagrant](https://www.vagrantup.com/), [Migraw](https://github.com/marcharding/migraw)) or directly on your machine.<br>
 Composer and NPM / Yarn are required to install the PHP and JS packages.
 ### Installation
-- clone Project from Github
-  ```bash
-  git clone https://github.com/field-interactive/cito-bundle.git <projectname>
-  cd <projectname>
-  composer install
-  npm install
-  # or
-  yarn
-  ```
-- install via Composer
+install via Composer
   ```bash
   composer create-project field-interactive/cito-skeleton <projectname>
   cd <projectname>
@@ -52,9 +43,7 @@ Composer and NPM / Yarn are required to install the PHP and JS packages.
   # or
   yarn
   ```
-
 ---
-
 
 ## Configuration
   If you install only the package and not the skeleton, you have to create the directories and files by hand.
@@ -165,12 +154,6 @@ Example:
 ````
 
 #### Options
-**Breadcrumb**
-`base.html.twig`
-````twig
-{{ navigation('path/to/navigation.html.twig', {'breadcrumbs': true}) }}
-````
-
 **Range**
 ````twig
 {# Just Level 2 #}
@@ -183,8 +166,7 @@ Example:
 Hands over a template for the language switch.<br>
 Available variables
 - `locale` -> current Locale
-- `link` -> current URL (without TLD and locale)
-- `languages` -> an `Array` of available languages with locale as key and name as value
+- `languages` -> an `Array` of available languages with locale as key and an array with the `link`, `language` name and `locale` as values.
 
 The array is build from the points of `translation_support` in the `cito.yaml`.
 
