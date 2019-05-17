@@ -48,12 +48,9 @@ if (Encore.isProduction()) {
                 '**/*.{gz,js,css,jpg,JPG,png,ico,otf,eot,ttf,woff,woff2,svg}'
             ],
             runtimeCaching: [
+                // Added Offline-Support for Pages
                 {
-                    urlPattern: new RegExp('/de/(.*)'),
-                    handler: 'StaleWhileRevalidate'
-                },
-                {
-                    urlPattern: new RegExp('/en/(.*)'),
+                    urlPattern: new RegExp('/*(.*)'),
                     handler: 'StaleWhileRevalidate'
                 },
                 {
