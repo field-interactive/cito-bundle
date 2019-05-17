@@ -17,7 +17,7 @@ class WebpImagesCommand extends Command
 
     protected $compiledPath;
 
-    public function __construct($webroot, string $name = null)
+    public function __construct(string $webroot, string $name = null)
     {
         $webroot = rtrim($webroot, '/').'/';
         $this->webroot = $webroot;

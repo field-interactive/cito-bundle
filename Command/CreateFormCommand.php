@@ -22,7 +22,7 @@ class CreateFormCommand extends Command
 
     private $directory;
 
-    public function __construct(Environment $twig, $namespace, $directory, string $name = null)
+    public function __construct(Environment $twig, string $namespace, string $directory, string $name = null)
     {
         $this->twig = $twig;
         $this->namespace = $namespace;
@@ -63,7 +63,7 @@ class CreateFormCommand extends Command
         }
 
         $file = $this->directory.$name.'.php';
-        $skeleton = __DIR__.'/../Resource/skeletons/FormSkeleton.php.twig';
+        $skeleton = __DIR__.'/../Resources/skeletons/FormSkeleton.php.twig';
 
         try {
 
