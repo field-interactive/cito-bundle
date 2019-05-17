@@ -69,7 +69,7 @@ if (Encore.isProduction()) {
             swDest: '../sw.js'
         })
     );
-
+    // Add generated Icon links to Faviconstemplate
     Encore.addPlugin(
         new HtmlWebpackPlugin({
             filename: path.join(__dirname, 'templates/partials/favicons.html.twig'),
@@ -79,7 +79,7 @@ if (Encore.isProduction()) {
             excludeChunks: [ 'css/main', 'js/main' ]
         })
     );
-
+    // Generate Favicons
     Encore.addPlugin(
         new WebappWebpackPlugin({
             logo: path.join(__dirname, config.icon.path),
