@@ -11,7 +11,7 @@ const cookies = _ => {
     }
 
     agree.addEventListener('click', e => {
-        event.preventDefault();
+        e.preventDefault();
         notice.parentNode.removeChild(notice);
         Cookies.set('cookieNotice', 'accepted', { expires: 365 });
     });
