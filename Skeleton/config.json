@@ -1,20 +1,28 @@
 {
-  "publicPath": "/build",
-  "assetsPath": "public/build",
-  "styles": {
-      "frontend": {
-          "src": [
-              "./public/assets/sass/app.sass"
-          ],
-          "dest": "css/main"
-      }
-  },
-  "scripts": {
-      "frontend": {
-          "src": [
-              "./public/assets/js/app.js"
-          ],
-          "dest": "js/main"
-      }
-  }
+    "publicPath": "/build",
+    "assetsPath": "public/build",
+    "icon": {
+        "path": "",
+        "name": "",
+        "description": "",
+        "devURL": "https://www.field-interactive.com",
+        "backgroundColor": "#333",
+        "themeColor": "#000"
+    },
+    "styles": {
+        "frontend": {
+            "src": [
+                "./public/assets/sass/app.sass"
+            ],
+            "dest": "css/main"
+        }
+    },
+    "scripts": {
+        "frontend": {
+            "src": [
+                "./public/assets/js/app.js"
+            ],
+            "dest": "js/main"
+        }
+    }
 }
