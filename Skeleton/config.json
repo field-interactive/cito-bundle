@@ -1,10 +1,10 @@
 {
-  "publicPath": "/assets/build",
-  "assetsPath": "public/assets/build",
+  "publicPath": "/build",
+  "assetsPath": "public/build",
   "styles": {
       "frontend": {
           "src": [
-              "./public/assets/sass/default.sass"
+              "./public/assets/sass/app.sass"
           ],
           "dest": "css/main"
       }

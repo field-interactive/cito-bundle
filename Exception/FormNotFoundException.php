@@ -2,8 +2,9 @@
 
 namespace FieldInteractive\CitoBundle\Exception;
 
+use Throwable;
 
-class FeedNotFoundException extends \Exception
+class FormNotFoundException extends \Exception
 {
 
 }

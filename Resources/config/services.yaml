@@ -8,7 +8,8 @@ parameters:
     field_cito.routing.user_agent_routing: []
     field_cito.translation.translation_enabled: false
     field_cito.translation.translation_support: []
-    social_media: []
+    forms_namespace: 'App\Form'
+    forms_dir: '%kernel.project_dir%/src/Form'
 
 services:
     # default configuration for services in *this* file
@@ -35,17 +36,6 @@ services:
         arguments:
             - '%field_cito.dir.pages%'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-    FieldInteractive\CitoBundle\Service\SocialMediaService:
-            public: true
-            arguments:
-                $socialMedia: "%social_media%"
-                $postsPath: "%field_cito.dir.posts%"
-                $projectDir: "%kernel.project_dir%/public"
-            tags:
-                - { name: "SocialMediaService" }
-
     FieldInteractive\CitoBundle\Service\RouteResolverService:
         public: true
         arguments:
@@ -53,6 +43,11 @@ services:
             $translationEnabled: "%field_cito.translation.translation_enabled%"
         tags:
             - { name: "RouteResolverService" }
+
+    FieldInteractive\CitoBundle\Service\FormProvider:
+        arguments:
+            $formDir: '%forms_dir%'
+            $formNamespace: '%forms_namespace%'
 
     FieldInteractive\CitoBundle\Twig\CitoExtension:
         public: true
@@ -79,7 +74,7 @@ services:
         tags:
         - { name: twig.extension }
 
-    nochso.html_compress_extension:
-        class: nochso\HtmlCompressTwig\Extension
-        tags:
-            - { name: twig.extension }
+    FieldInteractive\CitoBundle\Command\CreateFormCommand:
+        arguments:
+            $namespace: '%forms_namespace%'
+            $directory: '%forms_dir%'

@@ -38,6 +38,12 @@
 
 <body class="{{ (body_class is defined) ? body_class : '' }}" id="{{ (body_id is defined) ? body_id : '' }}">
 
+{% include 'partials/cookie.html.twig' %}
+
+{% block body %}
+
+{% endblock %}
+
 {% for file in encore_entry_js_files('js/main') %}
     <script src="{{ asset(file) }}" defer async></script>
 {% endfor %}
