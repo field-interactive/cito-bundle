@@ -39,7 +39,7 @@
         "symfony/filesystem": "^3.0|^4.2",
         "symfony/process": "^3.0|^4.2",
         "symfony/translation": "^4.2",
-        "liip/imagine-bundle": "^2.0",
+        "liip/imagine-bundle": "^2.1",
         "composer/ca-bundle": "^1",
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/swiftmailer-bundle":"^3.2",
