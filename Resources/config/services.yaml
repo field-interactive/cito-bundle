@@ -78,3 +78,7 @@ services:
         arguments:
             $namespace: '%forms_namespace%'
             $directory: '%forms_dir%'
+
+    FieldInteractive\CitoBundle\Command\WebPImagesCommand:
+        arguments:
+            $webroot: '%kernel.project_dir%/public'
