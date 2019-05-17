@@ -41,21 +41,27 @@ if (Encore.isProduction()) {
     // SW Generation
     Encore.addPlugin(
         new WorkboxPlugin.GenerateSW({
-            globDirectory: config.assetsPath,
+            globDirectory: 'public',
+            clientsClaim: true,
+            skipWaiting: true,
             globPatterns: [
                 '**/*.{gz,js,css,jpg,JPG,png,ico,otf,eot,ttf,woff,woff2,svg}'
             ],
             runtimeCaching: [
                 {
                     urlPattern: new RegExp('/de/(.*)'),
-                    handler: 'staleWhileRevalidate'
+                    handler: 'StaleWhileRevalidate'
                 },
                 {
                     urlPattern: new RegExp('/en/(.*)'),
-                    handler: 'staleWhileRevalidate'
+                    handler: 'StaleWhileRevalidate'
+                },
+                {
+                    urlPattern: new RegExp('https://cdnjs.cloudflare.com/'),
+                    handler: 'StaleWhileRevalidate'
                 }
             ],
-            swDest: '../../sw.js'
+            swDest: '../sw.js'
         })
     );
     // GZip Compression
