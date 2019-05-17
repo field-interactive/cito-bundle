@@ -1,16 +1,10 @@
-import { images } from '../vars';
+import jQuery from 'jquery';
 
-const setImageHeight = _ => {
-    ;['load', 'resize'].forEach(event => {
-        window.addEventListener(event, _ => {
-            if (!images.length) return false;
-            images.forEach(img => {
-                const ratio = img.getAttribute('data-ratio');
-                const width = img.offsetWidth;
-                img.style.height = `${Math.floor(width / ratio)}px`;
-            });
-        });
-    });
+const setImageHeight = el => {
+    const $el = jQuery(el)
+    const ratio = $el.data('ratio');
+    const width = $el.width();
+    $el.css('height', `${Math.floor(width / ratio)}px`);
 };
 
 export { setImageHeight };
