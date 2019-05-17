@@ -44,11 +44,7 @@
 
 {% endblock %}
 
-{% for file in encore_entry_js_files('js/main') %}
-    <script src="{{ asset(file) }}" defer async></script>
-{% endfor %}
-
-{% if not app.environment == 'dev' %}
+{% if app.environment != 'dev' %}
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
@@ -57,6 +53,11 @@
         }
     </script>
 {% endif %}
+
+{% for file in encore_entry_js_files('js/main') %}
+    <script src="{{ asset(file) }}" defer async></script>
+{% endfor %}
+
 {% block javascripts %}{% endblock %}
 </body>
 
