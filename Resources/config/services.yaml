@@ -1,3 +1,5 @@
+# Put parameters here that don't need to change on each machine where the app is deployed
+# https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     field_cito.dir.pages: '%kernel.project_dir%/pages/'
     field_cito.dir.posts: '%kernel.project_dir%/public/posts/'
@@ -6,6 +8,8 @@ parameters:
     field_cito.routing.user_agent_routing: []
     field_cito.translation.translation_enabled: false
     field_cito.translation.translation_support: []
+    forms_namespace: 'App\Form'
+    forms_dir: '%kernel.project_dir%/src/Form'
 
 services:
     # default configuration for services in *this* file
@@ -40,6 +44,11 @@ services:
         tags:
             - { name: "RouteResolverService" }
 
+    FieldInteractive\CitoBundle\Service\FormProvider:
+        arguments:
+            $formDir: '%forms_dir%'
+            $formNamespace: '%forms_namespace%'
+
     FieldInteractive\CitoBundle\Twig\CitoExtension:
         public: true
         arguments:
@@ -64,3 +73,12 @@ services:
         arguments: ['@twig', '%field_cito.routing.user_agent_enabled%', '%field_cito.routing.user_agent_routing%', '%field_cito.routing.default_user_agent%']
         tags:
         - { name: twig.extension }
+
+    FieldInteractive\CitoBundle\Command\CreateFormCommand:
+        arguments:
+            $namespace: '%forms_namespace%'
+            $directory: '%forms_dir%'
+
+    FieldInteractive\CitoBundle\Command\WebpImagesCommand:
+        arguments:
+            $webroot: '%kernel.project_dir%/public'

@@ -50,6 +50,8 @@ class ScriptHandler
 
         if (!$fs->exists($publicDir.'/assets/')) {
             $fs->mirror(__DIR__ . '/../Resources/public/', $publicDir);
+            $fs->mkdir($publicDir.'/assets/fonts');
+            $fs->mkdir($publicDir.'/assets/images');
         }
     }
 
@@ -70,8 +72,8 @@ class ScriptHandler
              $fs->copy(__DIR__ . '/../Resources/config/routes/z_cito.yaml', $configDir . '/routes/z_cito.yaml');
          }
 
-         if(!$fs->exists($configDir . '/routes/imagine.yaml')) {
-             $fs->copy(__DIR__ . '/../Resources/config/routes/imagine.yaml', $configDir . '/routes/imagine.yaml');
+         if(!$fs->exists($configDir . '/routes/liip_imagine.yaml')) {
+             $fs->copy(__DIR__ . '/../Resources/config/routes/imagine.yaml', $configDir . '/routes/liip_imagine.yaml');
          }
 
          // twig config

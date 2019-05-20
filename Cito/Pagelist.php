@@ -153,7 +153,7 @@ class Pagelist
         );
 
         foreach ($iterator as $item) {
-            if (!strpos(str_replace('\\', '/', $item->getPathname()), $current) && $item->isFile()) {
+            if (!in_array($item->getFilename(), ['.', '..']) &&  $item->isFile() && $item->getRealPath() != realpath($dir.$current)) {
                 $fullPath = $item->getPathname();
                 $relativePath = Page::generateRelativePath($fullPath);
                 $template = $environment->load($relativePath);

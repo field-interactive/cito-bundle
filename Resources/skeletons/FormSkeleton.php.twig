@@ -1,0 +1,25 @@
+namespace {{ namespace }};
+
+use FieldInteractive\CitoBundle\Cito\Flash;
+use FieldInteractive\CitoBundle\Form\CitoForm;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormBuilderInterface;
+
+class {{ name }} extends CitoForm
+{
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+    }
+
+    public static function postSubmit(Form $form)
+    {
+        {% if mailer %}
+$mailer = self::$container->get("swiftmailer.mailer.default");
+        {% endif %}
+$data = $form->getData();
+
+        // TODO: implement method stub
+
+        self::$flash = new Flash("success", "Form successful submitted");
+    }
+}

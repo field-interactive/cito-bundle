@@ -4,15 +4,15 @@
     {% if sizes is iterable %}
         {% for size in sizes|slice(0, 6) %}
             <source media="(min-width: {{ size }}px)"
-                    data-srcset="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  size}}) }} 1x,
-                    {{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  (size * 2)}}) }} 2x">
+                    data-srcset="{{ asset(path)|replace({'.jpg': '.webp', '.png': '.webp'}) | imagine_filter('picture_macro', {'relative_resize': {'widen':  size}}) }} 1x,
+                    {{ asset(path)|replace({'.jpg': '.webp', '.png': '.webp'}) | imagine_filter('picture_macro', {'relative_resize': {'widen':  (size * 2)}}) }} 2x">
             {% set default = size %}
         {% endfor %}
     {% else %}
         {% set default = sizes|default(600) %}
         <source media="(min-width: {{ default }}px)"
-                data-srcset="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }} 1x,
-                {{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  (default * 2)}}) }} 2x">
+                data-srcset="{{ asset(path)|replace({'.jpg': '.webp', '.png': '.webp'}) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }} 1x,
+                {{ asset(path)|replace({'.jpg': '.webp', '.png': '.webp'}) | imagine_filter('picture_macro', {'relative_resize': {'widen':  (default * 2)}}) }} 2x">
     {% endif %}
     <img data-ratio="{{ path|ratio }}" data-src="{{ asset(path) | imagine_filter('picture_macro', {'relative_resize': {'widen':  default}}) }}"
         {% for k, a in attr %}
