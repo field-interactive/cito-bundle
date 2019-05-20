@@ -50,8 +50,8 @@ class ScriptHandler
 
         if (!$fs->exists($publicDir.'/assets/')) {
             $fs->mirror(__DIR__ . '/../Resources/public/', $publicDir);
-            $fs->mkdir($publicDir.'/assests/fonts');
-            $fs->mkdir($publicDir.'/assests/images');
+            $fs->mkdir($publicDir.'/assets/fonts');
+            $fs->mkdir($publicDir.'/assets/images');
         }
     }
 

@@ -7,8 +7,6 @@ namespace FieldInteractive\CitoBundle\Cito;
  */
 class Page
 {
-    private $template;
-
     /**
      * @var array
      */
@@ -53,7 +51,6 @@ class Page
      */
     public function __construct(\Twig_TemplateWrapper $template, $context = [], $userAgentEnabled = false)
     {
-        $this->template = $template;
         $this->fullPath = str_replace('\\', '/', $template->getSourceContext()->getPath());
         $this->path = $this->generateRelativePath($this->fullPath);
         $this->link = $this->generateSelfLink($this->fullPath, $userAgentEnabled);
@@ -98,13 +95,14 @@ class Page
      */
     public static function generateRelativePath($absolutePath)
     {
-        if ($start = strpos($absolutePath, '/pages/')) {
-            return substr($absolutePath, $start + 7);
-        } elseif ($start = strpos($absolutePath, '/templates/')) {
-            return substr($absolutePath, $start + 11);
+        $path = str_replace('\\', '/', $absolutePath);
+        if ($start = strpos($path, '/pages/')) {
+            return substr($path, $start + 7);
+        } elseif ($start = strpos($path, '/templates/')) {
+            return substr($path, $start + 11);
         }
 
-        return $absolutePath;
+        return $path;
     }
 
     /**
@@ -114,6 +112,7 @@ class Page
      */
     public static function generateSelfLink($path, $userAgentEnabled)
     {
+        $path = str_replace('\\', '/', $path);
         if ($start = strpos($path, '/pages/')) {
             $path = substr($path, $start + 7);
             if ($userAgentEnabled && (substr( $path, 0, 3 ) === "new" || substr( $path, 0, 3 ) === "old")) {
