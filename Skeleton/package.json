@@ -4,11 +4,9 @@
         "autoprefixer": "^9.5.1",
         "compression-webpack-plugin": "^2.0.0",
         "core-js": "^3.0.1",
-        "html-webpack-plugin": "^4.0.0-beta.5",
         "node-sass": "^4.12.0",
         "postcss-loader": "^3.0.0",
         "sass-loader": "^7.0.1",
-        "webapp-webpack-plugin": "^2.7.0",
         "webpack-notifier": "^1.7.0",
         "workbox-webpack-plugin": "^4.3.0"
     },
@@ -23,14 +21,15 @@
         "Firefox ESR"
     ],
     "scripts": {
-        "dev-server": "encore dev-server --config-name standardConfig",
-        "dev": "encore dev --config-name standardConfig",
-        "watch": "encore dev --watch --config-name standardConfig",
-        "build": "encore production --progress --config-name standardConfig",
-        "build:pwa": "encore production --progress --config-name pwa"
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "encore dev --watch",
+        "build": "encore production --progress"
     },
     "dependencies": {
+        "intersection-observer": "^0.6.0",
         "jquery": "^3.4.0",
-        "js-cookie": "^2.2.0"
+        "js-cookie": "^2.2.0",
+        "vanilla-lazyload": "^12.0.0"
     }
 }
