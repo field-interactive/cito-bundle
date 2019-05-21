@@ -157,7 +157,7 @@ class ScriptHandler
     /**
      * @param Event $event
      */
-    public static function postProjectCreate(Event $event)
+    public static function postCreateProject(Event $event)
     {
         $options = static::getOptions($event);
         $publicDir = $options['symfony-public-dir'];
@@ -169,7 +169,7 @@ class ScriptHandler
         $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', true);
         $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', true);
 
-        $fs->remove('assets/*');
+        $fs->remove('assets');
     }
 
     /**
