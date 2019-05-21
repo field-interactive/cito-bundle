@@ -168,6 +168,8 @@ class ScriptHandler
         $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', true);
         $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', true);
         $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', true);
+
+        $fs->remove('assets/*');
     }
 
     /**
