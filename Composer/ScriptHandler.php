@@ -149,22 +149,25 @@ class ScriptHandler
 
         $fs->mirror(__DIR__ . '/../Skeleton/', $publicDir.'/../');
 
-//        if (!$fs->exists($publicDir . '/../config.json')) {
-//            $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', false);
-//        }
-//        if (!$fs->exists($publicDir . '/../package.json')) {
-//            $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', false);
-//        }
-//        if (!$fs->exists($publicDir . '/../postcss.config.js')) {
-//            $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', false);
-//        }
-//        if (!$fs->exists($publicDir . '/../webpack.config.js')) {
-//            $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', false);
-//        }
-
         // Additional information
         echo 'You can now do a npm install for the javascript packages.';
         echo 'You can use Webpack to compile sass, javascripts and more.';
+    }
+
+    /**
+     * @param Event $event
+     */
+    public static function postProjectCreate(Event $event)
+    {
+        $options = static::getOptions($event);
+        $publicDir = $options['symfony-public-dir'];
+        $fs = new Filesystem();
+
+        // Override files added by symfony/webpack-encore-bundle
+        $fs->copy(__DIR__ . '/../Skeleton/config.json', 'config.json', true);
+        $fs->copy(__DIR__ . '/../Skeleton/package.json', 'package.json', true);
+        $fs->copy(__DIR__ . '/../Skeleton/postcss.config.js', 'postcss.config.js', true);
+        $fs->copy(__DIR__ . '/../Skeleton/webpack.config.js', 'webpack.config.js', true);
     }
 
     /**
