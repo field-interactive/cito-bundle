@@ -28,9 +28,7 @@
         "build:pwa": "encore production --progress --config-name pwa"
     },
     "dependencies": {
-        "intersection-observer": "^0.6.0",
         "jquery": "^3.4.0",
-        "js-cookie": "^2.2.0",
-        "vanilla-lazyload": "^12.0.0"
+        "js-cookie": "^2.2.0"
     }
 }
