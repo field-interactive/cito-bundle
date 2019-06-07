@@ -60,6 +60,7 @@ class Navigation
      */
     public function __construct($navigationSource, $requestedUri = false)
     {
+        libxml_use_internal_errors(true);
         $this->requestedUri = $requestedUri;
         $this->dom = new \DOMDocument();
         $this->dom->preserveWhiteSpace = false;
