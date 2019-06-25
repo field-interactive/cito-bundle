@@ -78,7 +78,7 @@ class FormProvider
         foreach ($formDir as $class) {
             $class = $this->formNamespace.rtrim($class, '.php');
             try {
-                if (class_exists($class) && !(new \ReflectionClass($class))->isAbstract()) {
+                if (class_exists($class) && is_subclass_of($class, CitoForm::class) && !(new \ReflectionClass($class))->isAbstract()) {
                     $form = $this->createForm($class);
                     $this->forms[$form->getName()] = $form;
                 }
@@ -144,17 +144,14 @@ class FormProvider
                 $class = $this->SnakecaseToCamelcase($form->getName());
                 $class = $this->formNamespace.rtrim($class, '.php');
                 try {
-                    if (class_exists($class)) {
-                        $reflection = new \ReflectionClass($class);
-                        if ($reflection->isSubclassOf(CitoForm::class)) {
-                            $class::setUp($this->container);
-                            $result = $class::postSubmit($form);
-                            if ($flash = $class::flashMessage()) {
-                                $this->container->get('session')->getFlashBag()->add($flash->type, $flash->message);
-                            }
-                            $class::reset();
-                            return $result;
+                    if (class_exists($class) && is_subclass_of($class, CitoForm::class)) {
+                        $class::setUp($this->container);
+                        $result = $class::postSubmit($form);
+                        if ($flash = $class::flashMessage()) {
+                            $this->container->get('session')->getFlashBag()->add($flash->type, $flash->message);
                         }
+                        $class::reset();
+                        return $result;
                     }
                 } catch (\ReflectionException $e) {
                     $this->logger->error($e->getMessage(), [
