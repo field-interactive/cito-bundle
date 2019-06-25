@@ -2,7 +2,7 @@
     "publicPath": "/build",
     "assetsPath": "public/build",
     "icon": {
-        "path": "",
+        "path": "./public/assets/images/icon.png",
         "name": "",
         "description": "",
         "devURL": "https://www.field-interactive.com",
