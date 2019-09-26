@@ -23,11 +23,7 @@
         <meta content="noarchive" name="robots">
         <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"/>
 
-        {% if app.environment != 'dev' %}
-            {{ include('/partials/favicons.html.twig') }}
-        {% endif %}
-
-        {{ encore_entry_link_tags('css/main') }}
+        {{ encore_entry_link_tags('css', null, 'modern') }}
 
         {% block stylesheets %}{% endblock %}
 
@@ -43,19 +39,24 @@
 {% endblock %}
 
 {% if app.environment != 'dev' %}
-    <script>
+    <script async defer>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js');
             });
         }
     </script>
-{% endif %}
 
-{% for file in encore_entry_js_files('js/main') %}
-    <script src="{{ asset(file) }}" defer async></script>
+{% endif %}
+{% for file in encore_entry_js_files('js/modern', 'modern') %}
+    <script type="module" src="{{ asset(file) }}" async></script>
 {% endfor %}
 
+{% if app.environment != 'dev' %}
+    {% for file in encore_entry_js_files('js/legacy', 'legacy') %}
+        <script nomodule src="{{ asset(file) }}" defer async></script>
+    {% endfor %}
+{% endif %}
 {% block javascripts %}{% endblock %}
 </body>
 

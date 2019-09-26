@@ -2,7 +2,7 @@ import jQuery from 'jquery';
 import { cookies } from './modules/cookies';
 import { setImageHeight } from './utility/setImageHeight';
 
-(function (w, d) {
+((w, d) => {
     const b = d.getElementsByTagName('body')[0];
     const s = d.createElement('script');
     s.async = true;

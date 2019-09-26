@@ -1,0 +1,5 @@
+webpack_encore:
+    output_path: '%kernel.project_dir%/public/build'
+    builds:
+        modern: '%kernel.project_dir%/public/modern'
+        legacy: '%kernel.project_dir%/public/legacy'
