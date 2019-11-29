@@ -1,4 +1,4 @@
-const notice = document.querySelector('#notice');
-const agree = document.querySelector('.agree');
+const notice = document.querySelector('#cookie');
+const agree = document.querySelector('.accept');
 
 export { notice, agree };
