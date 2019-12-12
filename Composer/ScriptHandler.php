@@ -76,53 +76,6 @@ class ScriptHandler
              $fs->copy(__DIR__ . '/../Resources/config/routes/imagine.yaml', $configDir . '/routes/liip_imagine.yaml');
          }
 
-         // twig config
-         if ($fs->exists($configDir . '/packages/twig.yaml') && !empty(Yaml::parseFile($configDir . '/packages/twig.yaml'))) {
-             $twigYaml = Yaml::parseFile($configDir . '/packages/twig.yaml');
-             $pagesDir = (strpos($pagesDir, 'kernel.project_dir')) ? $pagesDir : '%kernel.project_dir%/' . $pagesDir;
-
-             if (!array_key_exists('paths', $twigYaml['twig']) || !is_array($twigYaml['twig']['paths']) || !in_array($pagesDir, $twigYaml['twig']['paths'])) {
-                 $twigYaml['twig']['paths'][] = $pagesDir;
-             }
-             // safe new twig.yaml
-             $yaml = Yaml::dump($twigYaml, 99);
-             $fs->remove($configDir . '/packages/twig.yaml');
-             $fs->dumpFile($configDir . '/packages/twig.yaml', $yaml);
-
-         } else {
-             $fs->copy(__DIR__ . '/../Resources/config/packages/twig.yaml', $configDir . '/packages/twig.yaml', true);
-         }
-
-         // framework config
-         if ($fs->exists($configDir . '/packages/framework.yaml') && !empty(Yaml::parseFile($configDir . '/packages/framework.yaml'))) {
-             $frameworkYaml = Yaml::parseFile($configDir . '/packages/framework.yaml');
-             if (!array_key_exists('assets', $frameworkYaml['framework']) || !is_array($frameworkYaml['framework']['assets']) || !in_array('json_manifest_path', $frameworkYaml['framework']['assets'])) {
-                 $frameworkYaml['framework']['assets'] = ['json_manifest_path' => '%kernel.project_dir%/public/build/manifest.json'];
-             }
-             // safe new framework.yaml
-             $yaml = Yaml::dump($frameworkYaml, 99);
-             $fs->remove($configDir . '/packages/framework.yaml');
-             $fs->dumpFile($configDir . '/packages/framework.yaml', $yaml);
-
-         } else {
-             $fs->copy(__DIR__ . '/../Resources/config/packages/framework.yaml', $configDir . '/packages/framework.yaml', true);
-         }
-
-         // imagine config
-         if ($fs->exists($configDir . '/packages/imagine.yaml') && !empty(Yaml::parseFile($configDir . '/packages/imagine.yaml'))) {
-             $imagineYaml = Yaml::parseFile($configDir . '/packages/imagine.yaml');
-             if (!array_key_exists('filter_sets', $imagineYaml['liip_imagine']) || !is_array($imagineYaml['liip_imagine']['filter_sets']) || !in_array('picture_macro', $imagineYaml['liip_imagine']['filter_sets'])) {
-                 $picture_macro = Yaml::parseFile(__DIR__ . '/../Resources/config/packages/imagine.yaml')['liip_imagine']['filter_sets'];
-                 $imagineYaml['liip_imagine']['filter_sets']['picture_macro'] = $picture_macro['picture_macro'];
-             }
-             // safe new imagine.yaml
-             $yaml = Yaml::dump($imagineYaml, 99);
-             $fs->remove($configDir . '/packages/imagine.yaml');
-             $fs->dumpFile($configDir . '/packages/imagine.yaml', $yaml);
-         } else {
-             $fs->copy(__DIR__ . '/../Resources/config/packages/imagine.yaml', $configDir . '/packages/imagine.yaml', true);
-         }
-
          // Add imaginebundle to bundles.php
          $contents = require $configDir . '/bundles.php';
          if (!array_key_exists("Liip\ImagineBundle\LiipImagineBundle", $contents)) {
@@ -150,7 +103,7 @@ class ScriptHandler
         $fs->mirror(__DIR__ . '/../Skeleton/', $publicDir.'/../');
 
         // Additional information
-        echo 'You can now do a npm install for the javascript packages.';
+        echo 'You can now do a npm install for the javascript packages.'.PHP_EOL;
         echo 'You can use Webpack to compile sass, javascripts and more.';
     }
 
